@@ -34,3 +34,25 @@ export function getSlider () {
     return Promise.resolve(res.data)
   })
 }
+
+export function getList () {
+  const url = '/api/getList'
+
+  const data = Object.assign({}, commonParams, {
+    picmid: 1,
+    hostUin: 0,
+    uin: 0,
+    platform: 'yqq.json',
+    needNewCode: 0,
+    categoryId: 10000000,
+    sortId: 5,
+    sin: 0,
+    ein: 19
+  })
+
+  return axios.get(url, {
+    params: data
+  }).then(res => {
+    return Promise.resolve(res.data)
+  })
+}
