@@ -1,47 +1,50 @@
 <template>
-  <div class="recommend-wrapper" ref="scroll">
-    <div class="recommend-content">
-      <div v-if="sliders.length" class="slide-wrapper">
-        <swiper :options="swiperOption">
-            <swiper-slide v-for="item in sliders" :key="item.id">
-              <a :href="item.linkUrl"><img @load="loadImage" :src="item.picUrl" alt=""></a>
-            </swiper-slide>
-            <div class="swiper-pagination" slot="pagination"></div>
-          </swiper>
+  <div class="recommend-wrapper">
+    <scroll ref="scroll" class="recommend-content" :data="lists">
+      <div class="test-two" v-show="lists.length">
+        <div v-if="sliders.length" class="slide-wrapper">
+          <swiper :options="swiperOption">
+              <swiper-slide v-for="item in sliders" :key="item.id">
+                <a :href="item.linkUrl"><img :src="item.picUrl"></a>
+              </swiper-slide>
+              <div class="swiper-pagination" slot="pagination"></div>
+            </swiper>
+        </div>
+        <div class="recommend-list">
+          <h1 class="list-title">热门歌单推荐</h1>
+          <ul>
+            <li
+              v-for="item in lists"
+              :key="item.dissid"
+              class="item-list"
+            >
+              <div class="avatar">
+                <img @load="loadImage" class="image" v-lazy="item.imgurl">
+              </div>
+              <div class="text">
+                <h2 class="name">{{item.dissname}}</h2>
+                <p class="desc">{{item.creator.name}}</p>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="recommend-list">
-        <h1 class="list-title">热门歌单推荐</h1>
-        <ul>
-          <li
-            v-for="item in lists"
-            :key="item.dissid"
-            class="item-list"
-          >
-            <div class="avatar">
-              <img @load="loadImage" class="image" :src="item.imgurl" alt="">
-            </div>
-            <div class="text">
-              <h2 class="name">{{item.dissname}}</h2>
-              <p class="desc">{{item.creator.name}}</p>
-            </div>
-          </li>
-        </ul>
+      <div class="loading-container" v-if="!lists.length">
+          <loading></loading>
       </div>
-    </div>
+    </scroll>
   </div>
 </template>
 
 <script>
-import BScroll from '@better-scroll/core'
+import Scroll from 'base/scroll/scroll'
+import Loading from 'base/loading/loading'
 import { getSlider, getList } from 'api/recommend'
 
 export default {
   created () {
     this._getSlider()
     this._getList()
-  },
-  beforeDestroy () {
-    this.bs.destroy()
   },
   data () {
     return {
@@ -65,44 +68,28 @@ export default {
     _getList () {
       getList().then(res => {
         this.lists = res.data.list
-        // console.log(this.lists);
-        // this.$nextTick(() => {
-        //   if (!this.bs) {
-        //     this.initBS()
-        //   } else {
-        //     this.bs.refresh()
-        //   }
-        // })
       })
     },
     _getSlider () {
       getSlider().then(res => {
         this.sliders = res.data.slider
-        // console.log(this.sliders)
-        this.$nextTick(() => {
-          if (!this.bs) {
-            this.initBS()
-          } else {
-            this.bs.refresh()
-          }
-        })
-      })
-    },
-    initBS () {
-      this.bs = new BScroll(this.$refs.scroll, {
-        scrollY: true,
-        probeType: 3,
-        click: true
       })
     },
     loadImage () {
-      if ((!this.checkloaded) && this.bs) {
-        this.checkloaded = false
-        setTimeout(() => {
-          this.bs.refresh()
-        }, 20)
-      }
+      // if (!this.checkloaded) {
+      //   this.checkloaded = true
+      //   setTimeout(() => {
+      //     this.$refs.scroll.refresh()
+      //   }, 20)
+      // } // 第一张图片加载完后，下一轮tick(20ms后)，后面的图片竟然还没加载完。。。
+      setTimeout(() => {
+        this.$refs.scroll.refresh()
+      }, 20)
     }
+  },
+  components: {
+    Scroll,
+    Loading
   }
 }
 </script>
@@ -118,6 +105,7 @@ export default {
   right 0
   overflow hidden
   .recommend-content
+    height 100% // 继承了 wrapper
     .slide-wrapper >>> .swiper-pagination-bullet
       background rgb(255, 255, 255)
       opacity 0.6
@@ -157,4 +145,9 @@ export default {
             margin-bottom 10px
           .desc
             color $color-text-d
+    .loading-container
+      position absolute
+      width 100%
+      top: 50%
+      transform translateY(-50%)
 </style>
