@@ -41,8 +41,8 @@ module.exports = {
         const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
         axios.get(url, {
           headers: {
-            referer: 'https://c.y.qq.com',
-            host: 'c.y.qq.com'
+            referer: 'https://y.qq.com',
+            origin: 'https://y.qq.com'
           },
           params: req.query
         }).then(response => {

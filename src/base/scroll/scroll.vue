@@ -20,6 +20,10 @@ export default {
     data: {
       type: Array,
       default: null
+    },
+    listenScroll: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -32,6 +36,13 @@ export default {
         click: this.click
       })
       // console.log('1')
+
+      if (this.listenScroll) {
+        let vm = this
+        this.bs.on('scroll', (pos) => {
+          vm.$emit('scroll', pos)
+        })
+      }
     },
     enable () {
       this.bs && this.bs.enable()
@@ -41,6 +52,9 @@ export default {
     },
     refresh () {
       this.bs && this.bs.refresh()
+    },
+    scrollToElement (el, time) {
+      this.bs && this.bs.scrollToElement(el, time)
     }
   },
   watch: {
