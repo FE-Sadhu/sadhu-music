@@ -51,6 +51,21 @@ module.exports = {
           console.log(e)
         })
       })
+
+      app.get('/api/getSingerDetail', function (req, res) {
+        const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
+        axios.get(url, {
+          headers: {
+            referer: 'https://y.qq.com',
+            origin: 'https://y.qq.com'
+          },
+          params: req.query
+        }).then(response => {
+          res.json(response.data)
+        }).catch(e => {
+          console.log(e)
+        })
+      })
     }
   },
   chainWebpack (config) {

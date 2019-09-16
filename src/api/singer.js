@@ -1,6 +1,11 @@
 import axios from 'axios'
 
-import { isArray, isObject, isDate, forEach } from 'common/js/utils'
+import {
+  isArray,
+  isObject,
+  isDate,
+  forEach
+} from 'common/js/utils'
 
 export function getSingerList () {
   const url = '/api/getSingerList'
@@ -41,6 +46,46 @@ export function getSingerList () {
     params: data,
     paramsSerializer: _paramsSerializer
   }).then((res) => {
+    return Promise.resolve(res.data)
+  })
+}
+
+export function getSingerDetail (singerId) {
+  const url = '/api/getSingerDetail'
+
+  const data = {
+    '-': `getUCGI${Math.ceil(Math.random() * 10000000000000000)}`,
+    g_tk: 952113936,
+    loginUin: 0,
+    hostUin: 0,
+    format: 'json',
+    inCharset: 'utf8',
+    outCharset: 'utf-8',
+    notice: 0,
+    platform: 'yqq.json',
+    needNewCode: 0,
+    data: {
+      'comm': {
+        'ct': 24,
+        'cv': 0
+      },
+      'singer': {
+        'method': 'get_singer_detail_info',
+        'param': {
+          'sort': 5,
+          'singermid': singerId,
+          'sin': 0,
+          'num': 100
+        },
+        'module': 'music.web_singer_info_svr'
+      }
+    }
+  }
+
+  return axios.get(url, {
+    params: data,
+    paramsSerializer: _paramsSerializer
+  }).then(res => {
     return Promise.resolve(res.data)
   })
 }

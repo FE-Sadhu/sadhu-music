@@ -57,6 +57,7 @@ import Singer from 'common/js/singer'
 import pinyin from 'tiny-pinyin'
 import Scroll from 'base/scroll/scroll'
 import Loading from 'base/loading/loading'
+import { mapMutations } from 'vuex'
 
 const HOT_NAME = '热'
 const HOT_SINGER_LENGTH = 10
@@ -84,6 +85,7 @@ export default {
       this.$router.push({
         path: `/singer/${singer.id}`
       })
+      this.setSinger(singer) // 不用 mapMutations 语法糖的话，就等同于 this.$store.commit('SET_SINGER', singer)
     },
     _getSingerList () {
       getSingerList().then(res => {
@@ -185,7 +187,10 @@ export default {
         height += item.clientHeight
         this.listHeight.push(height)
       }
-    }
+    },
+    ...mapMutations({
+      setSinger: 'SET_SINGER' // 把 mutations 里的 SET_SINGER 方法映射到这里成 setSinger
+    })
   },
   watch: {
     singers () {

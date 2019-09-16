@@ -4,12 +4,28 @@
       music-list
     </div>
   </transition>
-  
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { getSingerDetail } from 'api/singer'
+
 export default {
-  
+  created () {
+    this._getSingerDetail(this.singer.id)
+  },
+  methods: {
+    _getSingerDetail (singerId) {
+      getSingerDetail(singerId).then(res => {
+        console.log(res)
+      })
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'singer' // 映射了 getter.js 中的 singer 函数来取数据
+    ])
+  }
 }
 </script>
 
