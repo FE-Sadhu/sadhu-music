@@ -1,49 +1,53 @@
 <template>
-  <scroll
-    class="wrapper-singer"
-    ref="scroll"
-    :probeType="3"
-    :data="singers"
-    :listenScroll="listenScroll"
-    @scroll="scroll"
-  >
-    <div class="content">
-      <div class="chunk" v-for="each in singers" :key="each.title" ref="listGroup">
-        <div class="title">{{each.title}}</div>
-        <ul>
-          <li
-            class="item"
-            v-for="(singer, index) in each.items"
-            :key="index"
-          >
-          <img class="avatar" v-lazy="singer.pic">
-          <h2 class="name">{{singer.name}}</h2>
-          </li>
-        </ul>
+  <div>
+    <scroll
+      class="wrapper-singer"
+      ref="scroll"
+      :probeType="3"
+      :data="singers"
+      :listenScroll="listenScroll"
+      @scroll="scroll"
+    >
+      <div class="content">
+        <div class="chunk" v-for="each in singers" :key="each.title" ref="listGroup">
+          <div class="title">{{each.title}}</div>
+          <ul>
+            <li
+              class="item"
+              v-for="(singer, index) in each.items"
+              :key="index"
+              @click="selectItem(singer)"
+            >
+            <img class="avatar" v-lazy="singer.pic">
+            <h2 class="name">{{singer.name}}</h2>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
-    <ul class="list-shortcut">
-      <li
-        v-for="(item, index) in singers"
-        :key="index"
-        :ref="item.title"
-        :data-index="index"
-        class="list-item"
-        :class="{'current' : currentIndex === index}"
-        @touchstart.stop.prevent="handleTouchStart"
-        @touchmove.stop.prevent="handleTouchMove"
-        @touchend.stop="handleTouchEnd"
-      >
-      {{item.title}}
-      </li>
-    </ul>
-    <div class="fixed-top" ref="fixed" v-show="fixedTitle">
-      <div class="fixed-title">{{fixedTitle}}</div>
-    </div>
-    <div class="loading" v-show="!singers.length">
-      <loading></loading>
-    </div>
-  </scroll>
+      <ul class="list-shortcut">
+        <li
+          v-for="(item, index) in singers"
+          :key="index"
+          :ref="item.title"
+          :data-index="index"
+          class="list-item"
+          :class="{'current' : currentIndex === index}"
+          @touchstart.stop.prevent="handleTouchStart"
+          @touchmove.stop.prevent="handleTouchMove"
+          @touchend.stop="handleTouchEnd"
+        >
+        {{item.title}}
+        </li>
+      </ul>
+      <div class="fixed-top" ref="fixed" v-show="fixedTitle">
+        <div class="fixed-title">{{fixedTitle}}</div>
+      </div>
+      <div class="loading" v-show="!singers.length">
+        <loading></loading>
+      </div>
+    </scroll>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
@@ -76,8 +80,14 @@ export default {
     this.listenScroll = true
   },
   methods: {
+    selectItem (singer) {
+      this.$router.push({
+        path: `/singer/${singer.id}`
+      })
+    },
     _getSingerList () {
       getSingerList().then(res => {
+        // console.log(res)
         this.singers = this._normalizeSinger(res.singerLis.data.singerlist)
         // console.log(this.singers)
       })
@@ -93,7 +103,7 @@ export default {
       list.forEach((item) => {
         if (map.hot.items.length < HOT_SINGER_LENGTH) {
           map.hot.items.push(new Singer({
-            id: item.singer_id,
+            id: item.singer_mid,
             name: item.singer_name,
             pic: item.singer_pic
           }))
@@ -109,7 +119,7 @@ export default {
         }
 
         map[key].items.push(new Singer({
-          id: item.singer_id,
+          id: item.singer_mid,
           name: item.singer_name,
           pic: item.singer_pic
         }))
