@@ -23,7 +23,7 @@
       ref="list"
     >
       <div class="song-list-wrapper">
-        <song-list :songs="songs"></song-list>
+        <song-list @select="selectItem" :songs="songs"></song-list>
       </div>
       <loading v-show="!songs.length" class="loading"></loading>
     </scroll>
@@ -35,6 +35,7 @@ import songList from 'base/song-list/song-list'
 import scroll from 'base/scroll/scroll'
 import loading from 'base/loading/loading'
 import { prefixStyle } from 'common/js/dom'
+import { mapActions } from 'vuex'
 
 const LAYER_HEIGHT = 40
 const transform = prefixStyle('transform') // js 版 自动加 css 前缀
@@ -114,7 +115,16 @@ export default {
     scroll (newY) {
       this.scrollY = newY.y
       // console.log(this.scrollY)
-    }
+    },
+    selectItem (item, index) {
+      this.selectPlay({
+        list: this.songs,
+        index
+      })
+    },
+    ...mapActions([
+      'selectPlay'
+    ])
   },
   components: {
     songList,
@@ -134,7 +144,7 @@ export default {
   bottom 0
   left 0
   right 0
-  z-index 200
+  z-index 100
   background $color-background
   .back
     position absolute

@@ -28,21 +28,24 @@ export default {
       }
       getSingerDetail(singerId).then(res => {
         // console.log(res)
-        this.songs = this._normalizeSingerDetail(res)
-        // console.log(this.songs)
+        // this.songs = this._normalizeSingerDetail(res)
+        this._normalizeSingerDetail(res)
       })
     },
     _normalizeSingerDetail (DData) {
       const ret = []
       const songList = DData.singer.data.songlist
-      songList.forEach(item => {
+      songList.forEach((item, index) => {
         getSongUrl(item.mid).then(res => {
           const part = res.req_0.data.midurlinfo[0].purl
           const url = part ? 'http://isure.stream.qqmusic.qq.com/' + part : ''
           ret.push(creatSong(item, url))
+          if (!songList[index + 1]) {
+            this.songs = ret
+          }
         })
       })
-      return ret // event loop 问题
+      // return ret // event loop 问题
     }
   },
   computed: {

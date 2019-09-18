@@ -1,8 +1,8 @@
 <template>
   <div>
     <ul>
-      <li class="li-item" v-for="(item, index) in songs" :key="index">
-        <div class="content"> 
+      <li @click="selectItem(item, index)" class="li-item" v-for="(item, index) in songs" :key="index">
+        <div class="content">
           <h2 class="name">{{item.name}}</h2>
           <p class="desc">{{desc(item)}}</p>
         </div>
@@ -22,6 +22,9 @@ export default {
     }
   },
   methods: {
+    selectItem (item, index) {
+      this.$emit('select', item, index) // 点击的是哪首歌(item),它在歌曲 songs 数组的索引是什么(index)
+    },
     desc (song) {
       return `${song.singer}·${song.album}`
     }
