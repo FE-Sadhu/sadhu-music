@@ -1,11 +1,6 @@
 import axios from 'axios'
 
-import {
-  isArray,
-  isObject,
-  isDate,
-  forEach
-} from 'common/js/utils'
+import { _paramsSerializer } from 'common/js/utils'
 
 export function getSingerList () {
   const url = '/api/getSingerList'
@@ -88,35 +83,4 @@ export function getSingerDetail (singerId) {
   }).then(res => {
     return Promise.resolve(res.data)
   })
-}
-
-function _paramsSerializer (params) {
-  var parts = []
-
-  forEach(params, function serialize (val, key) {
-    if (val === null || typeof val === 'undefined') {
-      return
-    }
-
-    if (isArray(val)) {
-      key = key + '[]'
-    } else {
-      val = [val]
-    }
-
-    forEach(val, function parseValue (v) {
-      if (isDate(v)) {
-        v = v.toISOString()
-      } else if (isObject(v)) {
-        v = JSON.stringify(v)
-      }
-      parts.push(encode(key) + '=' + encode(v))
-    })
-  })
-
-  return parts.join('&')
-}
-
-function encode (val) {
-  return encodeURIComponent(val).replace(/%40/gi, '@').replace(/%24/g, '$').replace(/%20/g, '+').replace(/%5B/gi, '[').replace(/%5D/gi, ']')
 }

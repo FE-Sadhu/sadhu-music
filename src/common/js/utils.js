@@ -43,9 +43,42 @@ function forEach (obj, fn) {
   }
 }
 
+// 重写 paramsSerializer 为 _paramsSerializer
+function _paramsSerializer (params) {
+  var parts = []
+
+  forEach(params, function serialize (val, key) {
+    if (val === null || typeof val === 'undefined') {
+      return
+    }
+
+    if (isArray(val)) {
+      key = key + '[]'
+    } else {
+      val = [val]
+    }
+
+    forEach(val, function parseValue (v) {
+      if (isDate(v)) {
+        v = v.toISOString()
+      } else if (isObject(v)) {
+        v = JSON.stringify(v)
+      }
+      parts.push(encode(key) + '=' + encode(v))
+    })
+  })
+
+  return parts.join('&')
+}
+
+function encode (val) {
+  return encodeURIComponent(val).replace(/%40/gi, '@').replace(/%24/g, '$').replace(/%20/g, '+').replace(/%5B/gi, '[').replace(/%5D/gi, ']')
+}
+
 export {
   isArray,
   isObject,
   isDate,
-  forEach
+  forEach,
+  _paramsSerializer
 }

@@ -106,8 +106,7 @@ export default {
         if (map.hot.items.length < HOT_SINGER_LENGTH) {
           map.hot.items.push(new Singer({
             id: item.singer_mid,
-            name: item.singer_name,
-            pic: item.singer_pic
+            name: item.singer_name
           }))
         }
 
@@ -122,8 +121,7 @@ export default {
 
         map[key].items.push(new Singer({
           id: item.singer_mid,
-          name: item.singer_name,
-          pic: item.singer_pic
+          name: item.singer_name
         }))
       })
 
