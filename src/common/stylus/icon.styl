@@ -1,25 +1,89 @@
-@font-face 
-  font-family: "iconfont"
-  src: url('../fonts/iconfont.eot?t=1568796786304') /* IE9 */
-  src: url('../fonts/iconfont.eot?t=1568796786304#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAPEAAsAAAAAB5QAAAN3AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDBgqCdIJxATYCJAMMCwgABCAFhG0HPRu+BhHVm1vI/gRx3HoBUNFt2tqaY0gizY01m3ZPBW8wAry5H0QFIqALAAAAAAie/vdrd97MfysiacEj1aSZJEIibaiYh7ghkUmExOkexUL+XZDDJW3omh+1qPbxZpHYFmVto01vWpQBOps2JU20AwCimm4v9wn0y3iqUQiDkCkWurCl+mjiQCNFaR7h0OjJZDHS1ewl2YREoKiBTY7mBwFRIC2SyBN7t+wGz217pPKbGo/VfOAoodFJF20wpGMRNuCANYYQAh/e3AxdoyIMU3Ie/C/fkXQB4UJ+/c/ltCk+v9V2ubvGprE3R70A44ACGnuRFUiC3jB2QUvcDAHitBlF5qxAEIpimL0EkL0ql4CiGQ3WkC9EEXzFRENugKg79XZAXAffl1+sUgRHoJgDV2bONDT11T5ED3/IwyGazgSwaaDAKGAgu5WWHTSKjKLEVaU1p3sMwU3l/z8QanJv/eGBQ0A8Zm4SgEEUdfBRcphw8BmKr3obBcADUaAL3CNy0akESROXGlS1NSHR0Ph4umxhy5MQTT+3ySjaks1hTmclLerBYJ0fa02hmefGJ5NkHbSBMG664stESWk6EKdtxO6mPB2MWCY0bkgejYwgqwGeQQla3N26ce+JiRAPdaVJkVG9oV4eCmVDjEIpbtB4xbn5TY0dPMyfOo3vqWWhqixtOVjFl9bnBP9z2socvilkwTQ33qCtLYTnqMd5hduvJfuh41agdPNlj9bThjBt9dAK6q6Tlk+peDSe7gBof6LrBecPA737J6V6hfOboa66HXEAQvWhAmGaqvhjv+HrOmcutl8UBsDTJTcH7lCDumcRxQET/R9RxzLTJKZWTRE6QiOuLBHcPQpRruKvFALkeR9uK0FiEqJcBMERoQVKlA7eyKMQkGAMPFEmIc4Ii9MTFOiiiMWAYQ4BCFnuwJHmAZQsj3gjv0FAmX/wZEUhzpYIFkzQL0o2CVrFAO4P2fNBtl5NmH/D+N6spCUB5YVyZT+M3ZCPr3igTDHk+sRJlYCEd1jAdrhtDKdwQa9dUj3nvqeqN3We98aQoFUMgPsD2fNBXnU1hc/fML43Kw0lVcEXypXrB0Y6hg74VXl0KrmVa65PnFAlgIR3YAEm3KwIA2d1u4JeO9KA0DnTo0rUVdktr97fbw1Qxpyk4omKw4jJHvGe5ELNbdMAAA==') format('woff2'),
-  url('../fonts/iconfont.woff?t=1568796786304') format('woff'),
-  url('../fonts/iconfont.ttf?t=1568796786304') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
-  url('../fonts/iconfont.svg?t=1568796786304#iconfont') format('svg') /* iOS 4.1- */
-
-
-.iconfont 
-  font-family: "iconfont" !important
-  font-size: 16px
+@font-face
+  font-family: 'music-icon'
+  src: url('../fonts/music-icon.eot?2qevqt')
+  src: url('../fonts/music-icon.eot?2qevqt#iefix') format('embedded-opentype'),
+          url('../fonts/music-icon.ttf?2qevqt') format('truetype'),
+          url('../fonts/music-icon.woff?2qevqt') format('woff'),
+          url('../fonts/music-icon.svg?2qevqt#music-icon') format('svg')
+  font-weight: normal
   font-style: normal
+
+[class^="icon-"], [class*=" icon-"]
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'music-icon' !important
+  speak: none
+  font-style: normal
+  font-weight: normal
+  font-variant: normal
+  text-transform: none
+  line-height: 1
+
+  /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
 
+.icon-ok:before
+  content: "\e900"
 
-.iconbofang:before 
-  content: "\e710";
+.icon-close:before
+  content: "\e901"
 
+.icon-add:before
+  content: "\e902"
 
-.iconiconfront-:before 
-  content: "\e609"
+.icon-play-mini:before
+  content: "\e903"
 
+.icon-playlist:before
+  content: "\e904"
+
+.icon-music:before
+  content: "\e905"
+
+.icon-search:before
+  content: "\e906"
+
+.icon-clear:before
+  content: "\e907"
+
+.icon-delete:before
+  content: "\e908"
+
+.icon-favorite:before
+  content: "\e909"
+
+.icon-not-favorite:before
+  content: "\e90a"
+
+.icon-pause:before
+  content: "\e90b"
+
+.icon-play:before
+  content: "\e90c"
+
+.icon-prev:before
+  content: "\e90d"
+
+.icon-loop:before
+  content: "\e90e"
+
+.icon-sequence:before
+  content: "\e90f"
+
+.icon-random:before
+  content: "\e910"
+
+.icon-back:before
+  content: "\e911"
+
+.icon-mine:before
+  content: "\e912"
+
+.icon-next:before
+  content: "\e913"
+
+.icon-dismiss:before
+  content: "\e914"
+
+.icon-pause-mini:before
+  content: "\e915"

@@ -42,6 +42,7 @@ export default {
           ret.push(creatSong(item, url))
           if (!songList[index + 1]) {
             this.songs = ret
+            // console.log(this.songs)
           }
         })
       })

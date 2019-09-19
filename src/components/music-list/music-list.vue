@@ -1,13 +1,13 @@
 <template>
   <div class="music-list">
     <div class="back" @click="handleBack">
-      <i class="icon iconfont">&#xe609;</i>
+      <i class="icon-back"></i>
     </div>
     <h1 class="title">{{title}}</h1>
     <div class="bgImage" :style="bgStyle" ref="img">
       <div class="play-wrapper">
         <div ref="playBtn" v-show="songs.length > 0" class="play">
-          <i class="iconfont icon-play">&#xe710;</i>
+          <i class="icon-play"></i>
           <span class="text">随机播放全部</span>
         </div>
       </div>
@@ -151,10 +151,10 @@ export default {
     top 0
     left 6px
     z-index 50
-    .icon
+    .icon-back
       display block
-      padding 6px 10px 10px 8px
-      font-size 30px
+      padding 10px
+      font-size $font-size-large-x
       color $color-theme
   .title
     position absolute
