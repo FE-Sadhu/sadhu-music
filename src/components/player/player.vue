@@ -27,18 +27,25 @@
           </div>
         </div>
         <div class="bottom">
+          <div class="progress-wrapper">
+            <span class="time time-l">{{format(currentTime)}}</span>
+            <div class="progress-bar-wrapper">
+              <progress-bar :percent="percent" @percentChange="onProgressBarChange"></progress-bar>
+            </div>
+            <span class="time time-r">{{format(currentSong.duration)}}</span>
+          </div>
           <div class="operators">
             <div class="icon i-left">
               <i class="icon-sequence"></i>
             </div>
             <div class="icon i-left">
-              <i class="icon-prev"></i>
+              <i class="icon-prev" @click="prev"></i>
             </div>
             <div class="icon i-center">
               <i :class="playIcon" @click="togglePlaying"></i>
             </div>
             <div class="icon i-right">
-              <i class="icon-next"></i>
+              <i class="icon-next" @click="next"></i>
             </div>
             <div class="icon i-right">
               <i class="icon icon-not-favorite"></i>
@@ -66,7 +73,12 @@
         </div>
       </div>
     </transition>
-    <audio ref="audio" :src="currentSong.url"></audio>
+    <audio ref="audio"
+      :src="currentSong.url"
+      @canplay="ready"
+      @error="error"
+      @timeupdate="updateTime"
+    ></audio>
   </div>
 </template>
 
@@ -74,10 +86,17 @@
 import { mapGetters, mapMutations } from 'vuex'
 import animations from 'create-keyframe-animation' // 第三方库，用来让js创建css3动画
 import { prefixStyle } from 'common/js/dom'
+import ProgressBar from 'base/progress-bar/progress-bar'
 
 const transform = prefixStyle('transform')
 
 export default {
+  data () {
+    return {
+      readyState: false,
+      currentTime: 0
+    }
+  },
   methods: {
     back () {
       this.setFullScreen(false)
@@ -87,7 +106,8 @@ export default {
     },
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN',
-      setPlayingState: 'SET_PLAYING_STATE'
+      setPlayingState: 'SET_PLAYING_STATE',
+      setCurrentIndex: 'SET_CURRENT_INDEX'
     }),
     enter (el, done) { // 动画执行完了就执行 done 函数， done 回调函数执行的时候，进入到下一个钩子函数
       const { x, y, scale } = this._getPosAndScale()
@@ -145,7 +165,68 @@ export default {
       }
     },
     togglePlaying () {
+      if (!this.readyState) {
+        return
+      }
       this.setPlayingState(!this.playing)
+    },
+    prev () {
+      if (!this.readyState) {
+        return
+      }
+      let index = this.currentIndex - 1
+      if (index === -1) {
+        index = this.playList.length - 1
+      }
+      this.setCurrentIndex(index)
+      if (!this.playing) {
+        this.togglePlaying()
+      }
+      this.readyState = false
+    },
+    next () {
+      if (!this.readyState) {
+        return
+      }
+      let index = this.currentIndex + 1
+      if (index === this.playList.length) {
+        index = 0
+      }
+      this.setCurrentIndex(index)
+      if (!this.playing) {
+        this.togglePlaying()
+      }
+      this.readyState = false
+    },
+    ready () {
+      this.readyState = true
+    },
+    error () {
+      this.readyState = true // 即使歌曲 url 未在 audio 加载成功，也不影响 点击播放/上一首/下一首
+    },
+    updateTime (e) { // 播放的时候，audio 会不断派发这个回调的事件
+      // console.log(e)
+      this.currentTime = e.target.currentTime // currentTime就是当时播放的时间，修改这个属性可以控制播放的位置
+    },
+    format (interval) {
+      interval = interval | 0 // 这是一个向下取整 相当于调用 Math.floor
+      const minute = interval / 60 | 0
+      const second = this._pad(interval % 60)
+      return `${minute}:${second}`
+    },
+    _pad (num, n = 2) { // 用0部位,n这里代表补到两位，该工具函数用于给上面 second 补0位
+      let len = num.toString().length
+      while (len < n) {
+        num = '0' + num
+        len++
+      }
+      return num
+    },
+    onProgressBarChange (percent) {
+      this.$refs.audio.currentTime = this.currentSong.duration * percent
+      if (!this.playing) {
+        this.togglePlaying()
+      }
     },
     /**
      * 计算内层Image的transform，并同步到外层容器，这样在暂停的时候，cd 就会停在原本 rotate 的位置
@@ -173,11 +254,15 @@ export default {
     cdCls () {
       return this.playing ? 'play' : ''
     },
+    percent () {
+      return this.currentTime / this.currentSong.duration
+    },
     ...mapGetters([
       'fullScreen',
       'playList',
       'currentSong',
-      'playing'
+      'playing',
+      'currentIndex'
     ])
   },
   watch: {
@@ -200,6 +285,9 @@ export default {
         }
       }
     }
+  },
+  components: {
+    ProgressBar
   }
 }
 </script>
@@ -295,6 +383,24 @@ export default {
         position absolute
         bottom 50px
         width 100%
+        .progress-wrapper
+          display flex
+          align-items center
+          width 80%
+          margin 0 auto
+          padding 10px 0
+          .time
+            color $color-text
+            font-size $font-size-small
+            flex 0 0 30px
+            line-height 30px
+            width 30px
+            &.time-l
+              text-align left
+            &.time-r
+              text-align right
+          .progress-bar-wrapper
+            flex 1
         .operators
           display flex
           align-items center
