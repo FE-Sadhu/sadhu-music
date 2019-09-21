@@ -75,10 +75,26 @@ function encode (val) {
   return encodeURIComponent(val).replace(/%40/gi, '@').replace(/%24/g, '$').replace(/%20/g, '+').replace(/%5B/gi, '[').replace(/%5D/gi, ']')
 }
 
+function getRandomInt (min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
+// 这是洗牌算法
+function shuffle (arr) {
+  let _arr = arr.slice()
+  for (let i = 0; i < _arr.length; i++) {
+    let j = getRandomInt(0, i)
+    let t = _arr[i]
+    _arr[i] = _arr[j]
+    _arr[j] = t
+  }
+  return _arr
+}
+
 export {
   isArray,
   isObject,
   isDate,
   forEach,
-  _paramsSerializer
+  _paramsSerializer,
+  shuffle
 }
