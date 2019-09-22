@@ -53,8 +53,11 @@ export default {
     refresh () {
       this.bs && this.bs.refresh()
     },
-    scrollToElement (el, time) {
-      this.bs && this.bs.scrollToElement(el, time)
+    scrollTo () {
+      this.bs && this.bs.scrollTo.apply(this.bs, arguments)
+    },
+    scrollToElement () {
+      this.bs && this.bs.scrollToElement.apply(this.bs, arguments)
     }
   },
   watch: {

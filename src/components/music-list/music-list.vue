@@ -36,12 +36,15 @@ import scroll from 'base/scroll/scroll'
 import loading from 'base/loading/loading'
 import { prefixStyle } from 'common/js/dom'
 import { mapActions } from 'vuex'
+import { playlistMixin } from 'common/js/mixin'
 
 const LAYER_HEIGHT = 40
 const transform = prefixStyle('transform') // js 版 自动加 css 前缀
 const backdrop = prefixStyle('backdrop-filter') // 高斯模糊
 
 export default {
+  name: 'MusicList',
+  mixins: [playlistMixin],
   created () {
     this.listenScroll = true
     this.probeType = 3
@@ -108,6 +111,11 @@ export default {
     }
   },
   methods: {
+    handlePlayList (playlist) {
+      const bottom = playlist.length > 0 ? '60px' : ''
+      this.$refs.list.$el.style.bottom = bottom
+      this.$refs.list.refresh()
+    },
     handleBack () {
       // this.$router.push('/singer')
       this.$router.back() // 与上面一样的效果

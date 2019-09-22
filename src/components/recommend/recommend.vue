@@ -1,5 +1,5 @@
 <template>
-  <div class="recommend-wrapper">
+  <div class="recommend-wrapper" ref="recommendWrapper">
     <scroll ref="scroll" class="recommend-content" :data="lists">
       <div class="test-two" v-show="lists.length">
         <div v-if="sliders.length" class="slide-wrapper">
@@ -17,6 +17,7 @@
               v-for="item in lists"
               :key="item.dissid"
               class="item-list"
+              @click="selectItem(item)"
             >
               <div class="avatar">
                 <img @load="loadImage" class="image" v-lazy="item.imgurl">
@@ -33,6 +34,7 @@
           <loading></loading>
       </div>
     </scroll>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -40,8 +42,11 @@
 import Scroll from 'base/scroll/scroll'
 import Loading from 'base/loading/loading'
 import { getSlider, getList } from 'api/recommend'
+import { playlistMixin } from 'common/js/mixin'
+import { mapMutations } from 'vuex'
 
 export default {
+  mixins: [playlistMixin],
   created () {
     this._getSlider()
     this._getList()
@@ -65,6 +70,17 @@ export default {
     }
   },
   methods: {
+    handlePlayList (playlist) {
+      const bottom = playlist.length > 0 ? '60px' : ''
+      this.$refs.recommendWrapper.style.bottom = bottom
+      this.$refs.scroll.refresh()
+    },
+    selectItem (item) {
+      this.$router.push({
+        path: `/recommend/${item.dissid}`
+      })
+      this.setDisc(item)
+    },
     _getList () {
       getList().then(res => {
         this.lists = res.data.list
@@ -85,7 +101,10 @@ export default {
       setTimeout(() => {
         this.$refs.scroll.refresh()
       }, 20)
-    }
+    },
+    ...mapMutations({
+      setDisc: 'SET_DISC'
+    })
   },
   components: {
     Scroll,

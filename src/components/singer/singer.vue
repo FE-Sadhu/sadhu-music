@@ -58,6 +58,7 @@ import pinyin from 'tiny-pinyin'
 import Scroll from 'base/scroll/scroll'
 import Loading from 'base/loading/loading'
 import { mapMutations } from 'vuex'
+import { playlistMixin } from 'common/js/mixin'
 
 const HOT_NAME = '热'
 const HOT_SINGER_LENGTH = 10
@@ -65,6 +66,7 @@ const SHORTCUT_HEIGHT = 18
 const TITLE_HEIGHT = 30
 
 export default {
+  mixins: [playlistMixin],
   data () {
     return {
       singers: [],
@@ -81,6 +83,11 @@ export default {
     this.listenScroll = true
   },
   methods: {
+    handlePlayList (playlist) {
+      const bottom = playlist.length > 0 ? '60px' : ''
+      this.$refs.scroll.$el.style.bottom = bottom
+      this.$refs.scroll.refresh()
+    },
     selectItem (singer) {
       this.$router.push({
         path: `/singer/${singer.id}`
