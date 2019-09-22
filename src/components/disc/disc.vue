@@ -22,13 +22,20 @@ export default {
   },
   methods: {
     _getSongList () {
+      if (!this.disc.dissid) { // 当前页面刷新回退到上一路由
+        this.$router.push({
+          path: '/recommend'
+        })
+      }
       getDissSongList(this.disc.dissid).then(res => {
-        this._normallizeSongs(res)
+        if (res.cdlist) {
+          this._normallizeSongs(res.cdlist[0])
+        }
       })
     },
     _normallizeSongs (list) {
       const ret = []
-      const songList = list.cdlist[0].songlist
+      const songList = list.songlist
       songList.forEach((item, index) => {
         getSongUrl(item.mid).then(res => {
           const part = res.req_0.data.midurlinfo[0].purl
