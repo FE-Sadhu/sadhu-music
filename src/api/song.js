@@ -1,10 +1,6 @@
 import axios from 'axios'
-import {
-  getUid
-} from 'common/js/uid'
-import {
-  _paramsSerializer
-} from 'common/js/utils'
+import { getUid } from 'common/js/uid'
+import { _paramsSerializer } from 'common/js/utils'
 
 export function getSongUrl (songmid) {
   const url = '/api/getSongUrl'

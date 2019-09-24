@@ -92,6 +92,7 @@ export default {
       this.$router.push({
         path: `/singer/${singer.id}`
       })
+      console.log(singer)
       this.setSinger(singer) // 不用 mapMutations 语法糖的话，就等同于 this.$store.commit('SET_SINGER', singer)
     },
     _getSingerList () {

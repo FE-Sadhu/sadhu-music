@@ -56,7 +56,7 @@
           <div class="progress-wrapper">
             <span class="time time-l">{{format(currentTime)}}</span>
             <div class="progress-bar-wrapper">
-              <progress-bar :percent="percent" @percentChange="onProgressBarChange"></progress-bar>
+              <progress-bar ref="progressBar" :percent="percent" @percentChange="onProgressBarChange"></progress-bar>
             </div>
             <span class="time time-r">{{format(currentSong.duration)}}</span>
           </div>
@@ -102,11 +102,11 @@
       </div>
     </transition>
     <audio ref="audio"
-      :src="currentSong.url"
       @canplay="ready"
       @error="error"
       @timeupdate="updateTime"
       @ended="end"
+      @pause="paused"
     ></audio>
   </div>
 </template>
@@ -228,6 +228,7 @@ export default {
     loop () {
       this.$refs.audio.currentTime = 0
       this.$refs.audio.play()
+      this.setPlayingState(true)
       if (this.currentLyric) {
         this.currentLyric.seek(0)
       }
@@ -269,9 +270,24 @@ export default {
       this.readyState = false
     },
     ready () {
+      clearTimeout(this.timer)
+      // 监听 playing 这个事件可以确保慢网速或者快速切换歌曲导致的 DOM Exception
       this.readyState = true
+      this.canLyricPlay = true
+      // this.savePlayHistory(this.currentSong)
+      // 如果歌曲的播放晚于歌词的出现，播放的时候需要同步歌词
+      if (this.currentLyric) {
+        this.currentLyric.seek(this.currentTime * 1000)
+      }
+    },
+    paused () {
+      this.setPlayingState(false)
+      if (this.currentLyric) {
+        this.currentLyric.stop()
+      }
     },
     error () {
+      clearTimeout(this.timer)
       this.readyState = true // 即使歌曲 url 未在 audio 加载成功，也不影响 点击播放/上一首/下一首
     },
     updateTime (e) { // 播放的时候，audio 会不断派发这个回调的事件
@@ -458,18 +474,42 @@ export default {
   },
   watch: {
     currentSong (newSong, oldSong) {
+      console.log(newSong.url, 1)
+      console.log(setTimeout(() => {
+        console.log(newSong.url)
+      }, 3000))
       if (newSong.id === oldSong.id) {
         return
       }
-      if (this.currentLyric) { // 切换歌曲时，把上一次播放的歌曲的 定时器(lyric parser库里面的) 清除掉，不然会歌曲乱跳
+      // if (this.currentLyric) { // 切换歌曲时，把上一次播放的歌曲的 定时器(lyric parser库里面的) 清除掉，不然会歌曲乱跳
+      //   this.currentLyric.stop()
+      // }
+      // setTimeout(() => {
+      //   this.$refs.audio.play() // 不能发生变化了就马上调用 audio 的 play，要等 audio 加载完歌曲后，所以用个 nextTick 延时
+      // }, 1000)
+      this.readyState = false
+      this.canLyricPlay = false
+      if (this.currentLyric) {
         this.currentLyric.stop()
+        // 重置为null
+        this.currentLyric = null
+        this.currentTime = 0
+        this.playingLyric = ''
+        this.currentLineNum = 0
       }
-      setTimeout(() => {
-        this.$refs.audio.play() // 不能发生变化了就马上调用 audio 的 play，要等 audio 加载完歌曲后，所以用个 nextTick 延时
-      }, 1000)
+      this.$refs.audio.src = newSong.url
+      this.$refs.audio.play()
+      // 若歌曲 5s 未播放，则认为超时，修改状态确保可以切换歌曲。
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
+        this.readyState = true
+      }, 5000)
       this.getLyric()
     },
     playing (newState) {
+      if (!this.readyState) {
+        return
+      }
       const audio = this.$refs.audio
       this.$nextTick(() => {
         newState ? audio.play() : audio.pause()
@@ -481,6 +521,14 @@ export default {
         } else {
           this.syncWrapperTransform('miniWrapper', 'miniImage')
         }
+      }
+    },
+    fullScreen (newVal) {
+      if (newVal) {
+        setTimeout(() => {
+          this.$refs.lyricList.refresh()
+          this.$refs.progressBar.setProgressOffset(this.percent)
+        }, 20)
       }
     }
   },

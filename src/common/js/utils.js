@@ -90,11 +90,24 @@ function shuffle (arr) {
   return _arr
 }
 
+function debounce (fun, delay) {
+  let timer
+  return function (...args) {
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      fun.apply(this, args)
+    }, delay)
+  }
+}
+
 export {
   isArray,
   isObject,
   isDate,
   forEach,
   _paramsSerializer,
-  shuffle
+  shuffle,
+  debounce
 }

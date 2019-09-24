@@ -28,6 +28,10 @@ export default {
     pullup: { // 是否上拉加载
       type: Boolean,
       default: false
+    },
+    beforeScroll: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -53,6 +57,12 @@ export default {
           if (this.bs.y <= this.bs.maxScrollY + 50) { // 这个判断条件代表 是否“快要滚动到底部了？” 这里的 50px 是自己定义的 在滚动到距离底部 50px 时触发
             this.$emit('scrollToEnd') // 这里 scrollToEnd 语义化表示滚动到底部了
           }
+        })
+      }
+
+      if (this.beforeScroll) {
+        this.bs.on('beforeScrollStart', () => {
+          this.$emit('beforeScroll')
         })
       }
     },

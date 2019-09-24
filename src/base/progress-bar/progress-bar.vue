@@ -55,6 +55,13 @@ export default {
       this._offset(offsetWidth)
       this._triggerPercent()
     },
+    setProgressOffset (percent) {
+      if (percent >= 0 && !this.touch.initiated) {
+        const barWidth = this.$refs.progressBar.clientWidth - BTN_WIDTH
+        const offsetWidth = percent * barWidth
+        this._offset(offsetWidth)
+      }
+    },
     _triggerPercent () { // trigger n.触发
       const barWidth = this.$refs.progressBar.clientWidth - BTN_WIDTH
       const percent = this.$refs.progress.clientWidth / barWidth
