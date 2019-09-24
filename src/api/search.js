@@ -22,7 +22,7 @@ export function getSearchHot () {
   })
 }
 
-export function getSearch (query, page, zhida) {
+export function getSearch (query, page, zhida, perpage) {
   const url = '/api/getSearch'
 
   const data = {
@@ -43,8 +43,8 @@ export function getSearch (query, page, zhida) {
     ie: 'utf-8',
     sem: 1,
     aggr: 0,
-    perpage: 20,
-    n: 20,
+    perpage,
+    n: perpage,
     p: page,
     remoteplace: 'txt.mqq.all'
   }

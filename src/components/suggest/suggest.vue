@@ -1,5 +1,11 @@
 <template>
-  <Scroll class="suggest" :data="result">
+  <Scroll
+    class="suggest"
+    :data="result"
+    :pullup="pullup"
+    @scrollToEnd="searchMore"
+    ref="suggest"
+  >
     <ul class="suggest-list">
       <li
         class="suggest-item"
@@ -13,6 +19,7 @@
           <p class="text" v-html="getDisplayName(item)"></p>
         </div>
       </li>
+      <loading v-show="hasMore" desc=""></loading>
     </ul>
   </Scroll>
 </template>
@@ -20,8 +27,10 @@
 <script>
 import { getSearch } from 'api/search'
 import Scroll from 'base/scroll/scroll'
+import Loading from 'base/loading/loading'
 
 const TYPE_SINGER = 'singer'
+const perpage = 20 // 每一页返回的歌曲个数
 
 export default {
   props: {
@@ -37,11 +46,10 @@ export default {
   data () {
     return {
       page: 1,
-      result: []
+      result: [],
+      pullup: true, // 传给 scroll 组件判断是否开启上拉加载
+      hasMore: true // 一个标志位，判断是否加载完了，上拉后是否需要加载
     }
-  },
-  created () {
-    // this.search()
   },
   methods: {
     getIconCls (item) {
@@ -66,14 +74,35 @@ export default {
       return ret.join('/')
     },
     search (query) {
+      this.page = 1 // query 变化后的重置操作
+      this.hasMore = true // query 变化后的重置操作
+      this.$refs.suggest.scrollTo(0, 0) // query 变化后的重置操作
       // 请求服务端，抓取检索数据
-      getSearch(query, this.page, this.showSinger).then(res => {
-        console.log(res)
-        this.result = this.normallizeRes(res.data)
-        console.log(this.result)
+      getSearch(query, this.page, this.showSinger, perpage).then(res => {
+        // console.log(res)
+        this.result = this._normallizeRes(res.data)
+        this._checkMore(res.data)
+        // console.log(this.result)
       })
     },
-    normallizeRes (data) {
+    searchMore () {
+      if (!this.hasMore) {
+        return
+      }
+      this.page++
+      getSearch(this.query, this.page, this.showSinger, perpage).then(res => {
+        this.result = this.result.concat(this._normallizeRes(res.data))
+        this._checkMore(res.data)
+      })
+    },
+    _checkMore (data) {
+      const song = data.song
+      const length = song.list.length
+      if (!length || (song.curnum + song.curpage * perpage) >= song.totalnum) {
+        this.hasMore = false
+      }
+    },
+    _normallizeRes (data) {
       let ret = []
       if (data.zhida && data.zhida.singerid) {
         ret.push({ ...data.zhida, ...{ type: TYPE_SINGER } })
@@ -91,7 +120,8 @@ export default {
     }
   },
   components: {
-    Scroll
+    Scroll,
+    Loading
   }
 }
 </script>

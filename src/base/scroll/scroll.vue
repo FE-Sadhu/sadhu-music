@@ -24,6 +24,10 @@ export default {
     listenScroll: {
       type: Boolean,
       default: false
+    },
+    pullup: { // 是否上拉加载
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -41,6 +45,14 @@ export default {
         let vm = this
         this.bs.on('scroll', (pos) => {
           vm.$emit('scroll', pos)
+        })
+      }
+
+      if (this.pullup) {
+        this.bs.on('scrollEnd', () => { // scrollEnd 表示 scroll 停止了 滚动结束
+          if (this.bs.y <= this.bs.maxScrollY + 50) { // 这个判断条件代表 是否“快要滚动到底部了？” 这里的 50px 是自己定义的 在滚动到距离底部 50px 时触发
+            this.$emit('scrollToEnd') // 这里 scrollToEnd 语义化表示滚动到底部了
+          }
         })
       }
     },

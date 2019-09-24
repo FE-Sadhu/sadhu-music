@@ -27,7 +27,7 @@ import Suggest from 'components/suggest/suggest'
 import { getSearchHot } from 'api/search'
 
 export default {
-  data() {
+  data () {
     return {
       hotKey: [],
       query: ''
