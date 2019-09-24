@@ -69,17 +69,17 @@ module.exports = {
         })
       })
 
-      app.get('/api/getSongUrl', function (req, res) {
+      app.post('/api/getPurlUrl', bodyParser.json(), function (req, res) {
         const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
-        axios.get(url, {
+        axios.post(url, req.body, {
           headers: {
-            referer: 'https://y.qq.com',
-            origin: 'https://y.qq.com'
-          },
-          params: req.query
-        }).then(response => {
+            referer: 'https://y.qq.com/',
+            origin: 'https://y.qq.com',
+            'Content-type': 'application/x-www-form-urlencoded'
+          }
+        }).then((response) => {
           res.json(response.data)
-        }).catch(e => {
+        }).catch((e) => {
           console.log(e)
         })
       })

@@ -8,8 +8,7 @@
 import MusicList from 'components/music-list/music-list'
 import { mapGetters } from 'vuex'
 import { getTopListSong } from 'api/rank'
-import { creatSong } from 'common/js/song'
-import { getSongUrl } from 'api/song'
+import { createSong, isValidMusic, processSongsUrl } from 'common/js/song'
 
 export default {
   data () {
@@ -30,24 +29,19 @@ export default {
         return
       }
       getTopListSong(this.topList.id, this.topList.period).then(res => {
-        this._normalizeSingerDetail(res.detail.data.songInfoList)
-      })
-    },
-    _normalizeSingerDetail (DData) {
-      const ret = []
-      const songList = DData
-      songList.forEach((item, index) => {
-        getSongUrl(item.mid).then(res => {
-          const part = res.req_0.data.midurlinfo[0].purl
-          const url = part ? 'http://isure.stream.qqmusic.qq.com/' + part : ''
-          ret.push(creatSong(item, url))
-          if (!songList[index + 1]) {
-            this.songs = ret
-            console.log(this.songs)
-          }
+        processSongsUrl(this._normalizeSongs(res.detail.data.songInfoList)).then(songs => {
+          this.songs = songs
         })
       })
-      // return ret // event loop 问题
+    },
+    _normalizeSongs (list) {
+      let ret = []
+      list.forEach((item) => {
+        if (isValidMusic(item.id, item.album.mid, item.pay, item.pay.price_album)) {
+          ret.push(createSong(item.id, item.mid, item.name, item.album.name, item.singer, item.interval, item.album.mid, item.url))
+        }
+      })
+      return ret
     }
   },
   computed: {

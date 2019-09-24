@@ -7,13 +7,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import { getSingerDetail } from 'api/singer'
-import { creatSong } from 'common/js/song'
-import { getSongUrl } from 'api/song'
+import { createSong, isValidMusic, processSongsUrl } from 'common/js/song'
 import musicList from 'components/music-list/music-list'
 
 export default {
   created () {
-    this._getSingerDetail(this.singer.id)
+    this._getSingerDetail()
   },
   data () {
     return {
@@ -21,32 +20,28 @@ export default {
     }
   },
   methods: {
-    _getSingerDetail (singerId) {
+    _getSingerDetail () {
       if (!this.singer.id) {
         this.$router.push('/singer')
         return
       }
-      getSingerDetail(singerId).then(res => {
-        // console.log(res)
-        // this.songs = this._normalizeSingerDetail(res)
-        this._normalizeSingerDetail(res)
+      getSingerDetail(this.singer.id).then(res => {
+        if (res.code === 0) {
+          // console.log(res.singer.data.songlist)
+          processSongsUrl(this._normalizeSongs(res.singer.data.songlist)).then((songs) => {
+            this.songs = songs
+          })
+        }
       })
     },
-    _normalizeSingerDetail (DData) {
-      const ret = []
-      const songList = DData.singer.data.songlist
-      songList.forEach((item, index) => {
-        getSongUrl(item.mid).then(res => {
-          const part = res.req_0.data.midurlinfo[0].purl
-          const url = part ? 'http://isure.stream.qqmusic.qq.com/' + part : ''
-          ret.push(creatSong(item, url))
-          if (!songList[index + 1]) {
-            this.songs = ret
-            // console.log(this.songs)
-          }
-        })
+    _normalizeSongs (list) {
+      let ret = []
+      list.forEach((item) => {
+        if (isValidMusic(item.id, item.album.mid, item.pay, item.pay.price_album)) {
+          ret.push(createSong(item.id, item.mid, item.name, item.album.name, item.singer, item.interval, item.album.mid, item.url))
+        }
       })
-      // return ret // event loop 问题
+      return ret
     }
   },
   computed: {

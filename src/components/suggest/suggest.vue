@@ -36,8 +36,7 @@ import Loading from 'base/loading/loading'
 import Singer from 'common/js/singer'
 import noResult from 'base/no-result/no-result'
 import { getSearch } from 'api/search'
-import { creatSong } from 'common/js/song'
-import { getSongUrl } from 'api/song'
+import { createSong, isValidMusic, processSongsUrl } from 'common/js/song'
 import { mapMutations, mapActions } from 'vuex'
 
 const TYPE_SINGER = 'singer'
@@ -97,13 +96,12 @@ export default {
       this.page = 1 // query 变化后的重置操作
       this.hasMore = true // query 变化后的重置操作
       this.$refs.suggest.scrollTo(0, 0) // query 变化后的重置操作
-      this.result = [] // watch query 变化后的重置
       // 请求服务端，抓取检索数据
       getSearch(query, this.page, this.showSinger, perpage).then(res => {
-        // console.log(1, res)
-        this._normallizeRes(res.data)
+        this._genResult(res.data).then((result) => {
+          this.result = result
+        })
         this._checkMore(res.data)
-        // console.log(this.result)
       })
     },
     searchMore () {
@@ -113,7 +111,9 @@ export default {
       this.page++
       getSearch(this.query, this.page, this.showSinger, perpage).then(res => {
         // this.result = this.result.concat(this._normallizeRes(res.data))
-        this._normallizeRes(res.data)
+        this._genResult(res.data).then((result) => {
+          this.result = this.result.concat(result)
+        })
         this._checkMore(res.data)
       })
     },
@@ -127,45 +127,24 @@ export default {
         this.hasMore = false
       }
     },
-    _normallizeRes (data) {
+    _genResult (data) {
       let ret = []
-      if (data.zhida && data.zhida.singerid) {
+      if (data.zhida && data.zhida.singerid && this.page === 1) {
         ret.push({ ...data.zhida, ...{ type: TYPE_SINGER } })
       }
-      if (data.song) {
-        const mid = []
-        const list = data.song.list
-        list.forEach(item => {
-          mid.push({
-            id: item.songid,
-            mid: item.songmid,
-            name: item.songname,
-            album: {
-              name: item.albumname,
-              mid: item.albummid
-            },
-            singer: item.singer,
-            interval: item.interval
-          })
-        })
-        mid.forEach((item, index) => {
-          getSongUrl(item.mid).then(res => {
-            const part = res.req_0.data.midurlinfo[0].purl
-            console.log(res)
-            const url = part ? 'http://isure.stream.qqmusic.qq.com/' + part : ''
-            ret.push(creatSong(item, url))
-            if (!mid[index + 1]) {
-              console.log(1, this.result)
-              if (this.result.length > 0) {
-                this.result = this.result.concat(ret.slice(1))
-              } else {
-                this.result = this.result.concat(ret)
-              }
-              console.log(2, this.result)
-            }
-          })
-        })
-      }
+      return processSongsUrl(this._normalizeSongs(data.song.list)).then((songs) => {
+        ret = ret.concat(songs)
+        return ret
+      })
+    },
+    _normalizeSongs (list) {
+      let ret = []
+      list.forEach((musicData) => {
+        if (isValidMusic(musicData.songid, musicData.albummid, musicData.pay, musicData.pay.payalbumprice)) {
+          ret.push(createSong(musicData.songid, musicData.songmid, musicData.songname, musicData.albumname, musicData.singer, musicData.interval, musicData.albummid, musicData.url))
+        }
+      })
+      return ret
     },
     ...mapMutations({
       setSinger: 'SET_SINGER' // 把 mutations 里的 SET_SINGER 方法映射到这里成 setSinger

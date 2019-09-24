@@ -1,4 +1,4 @@
-import { getLyric } from 'api/song'
+import { getLyric, getSongsUrl } from 'api/song'
 import { Base64 } from 'js-base64'
 
 export class Song {
@@ -30,23 +30,47 @@ export class Song {
   }
 }
 
-export function creatSong (musicData, url) {
+export function createSong (id, mid, name, album, singer, duration, albummid, url) {
   return new Song({
-    id: musicData.id,
-    mid: musicData.mid,
-    name: musicData.name,
-    album: musicData.album.name,
-    singer: filterSinger(musicData.singer),
-    duration: musicData.interval,
-    image: `http://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.album.mid}.jpg?max_age=2592000`,
+    id,
+    mid,
+    name,
+    album,
+    singer: filterSinger(singer),
+    duration,
+    image: `http://y.gtimg.cn/music/photo_new/T002R300x300M000${albummid}.jpg?max_age=2592000`,
     url
   })
 }
 
 function filterSinger (singer) {
   const ret = []
+  if (!singer) {
+    return ''
+  }
   singer.forEach(item => {
     ret.push(item.name)
   })
   return ret.join('/')
+}
+
+export function isValidMusic (id, albummid, pay, pricealbum) {
+  return id && albummid && (!pay || pricealbum === 0)
+}
+
+export function processSongsUrl (songs) {
+  if (!songs.length) {
+    return Promise.resolve(songs)
+  }
+  return getSongsUrl(songs).then((purlMap) => {
+    songs = songs.filter((song) => {
+      const purl = purlMap[song.mid]
+      if (purl) {
+        song.url = purl.indexOf('http') === -1 ? `http://dl.stream.qqmusic.qq.com/${purl}` : purl
+        return true
+      }
+      return false
+    })
+    return songs
+  })
 }
