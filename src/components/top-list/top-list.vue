@@ -1,13 +1,13 @@
 <template>
   <transition appear name="slide">
-    <music-list :title="title" :avatar="avatar" :songs="songs"></music-list>
+    <music-list :rank="true" :title="title" :avatar="avatar" :songs="songs"></music-list>
   </transition>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
 import MusicList from 'components/music-list/music-list'
 import { mapGetters } from 'vuex'
-import { getDissSongList } from 'api/recommend'
+import { getTopListSong } from 'api/rank'
 import { creatSong } from 'common/js/song'
 import { getSongUrl } from 'api/song'
 
@@ -18,24 +18,24 @@ export default {
     }
   },
   created () {
-    this._getSongList()
+    // console.log(this.topList)
+    this._getSong()
   },
   methods: {
-    _getSongList () {
-      if (!this.disc.dissid) { // 当前页面刷新回退到上一路由
+    _getSong () {
+      if (!this.topList.id) {
         this.$router.push({
-          path: '/recommend'
+          path: '/rank'
         })
+        return
       }
-      getDissSongList(this.disc.dissid).then(res => {
-        if (res.cdlist) {
-          this._normallizeSongs(res.cdlist[0])
-        }
+      getTopListSong(this.topList.id, this.topList.period).then(res => {
+        this._normalizeSingerDetail(res.detail.data.songInfoList)
       })
     },
-    _normallizeSongs (list) {
+    _normalizeSingerDetail (DData) {
       const ret = []
-      const songList = list.songlist
+      const songList = DData
       songList.forEach((item, index) => {
         getSongUrl(item.mid).then(res => {
           const part = res.req_0.data.midurlinfo[0].purl
@@ -43,7 +43,7 @@ export default {
           ret.push(creatSong(item, url))
           if (!songList[index + 1]) {
             this.songs = ret
-            // console.log(this.songs)
+            console.log(this.songs)
           }
         })
       })
@@ -52,14 +52,13 @@ export default {
   },
   computed: {
     title () {
-      return this.disc.dissname
+      return this.topList.topTitle
     },
     avatar () {
-      // console.log(this.disc)
-      return this.disc.imgurl
+      return this.topList.avatar
     },
     ...mapGetters([
-      'disc'
+      'topList'
     ])
   },
   components: {
@@ -68,10 +67,12 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
-  .slide-enter-active, .slide-leave-active
-    transition all 0.3s
+<style scoped lang='stylus' rel='stylesheet/stylus'>
+.slide-enter-active, .slide-leave-active {
+  transition: all 0.3s ease
+}
 
-  .slide-enter, .slide-leave-to
-    transform translate3d(100%, 0, 0)
+.slide-enter, .slide-leave-to {
+  transform: translate3d(100%, 0, 0)
+}
 </style>

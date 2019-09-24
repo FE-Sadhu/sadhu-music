@@ -8,7 +8,8 @@ const state = {
   sequenceList: [], // 排序播放列表
   mode: playMode.sequence, // 播放的模式： 顺序或其他的,默认为顺序播放
   currentIndex: -1, // 当前播放的索引 =》 (控制前进后退播放那些的)
-  disc: {}
+  disc: {},
+  topList: []
 }
 
 export default state

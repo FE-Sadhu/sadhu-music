@@ -1,9 +1,11 @@
 const path = require('path')
+const bodyParser = require('body-parser')
 const axios = require('axios')
 
 function resolve (dir) {
   return path.join(__dirname, dir)
 }
+
 module.exports = {
   devServer: {
     before (app) {
@@ -113,6 +115,66 @@ module.exports = {
             referer: 'https://y.qq.com/',
             origin: 'https://y.qq.com',
             host: 'y.qq.com'
+          },
+          params: req.query
+        }).then(response => {
+          res.json(response.data)
+        }).catch(e => {
+          console.log(e)
+        })
+      })
+
+      app.post('/api/getRank', bodyParser.json(), function (req, res) {
+        const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
+        axios.post(url, req.body, {
+          headers: {
+            referer: 'https://y.qq.com/',
+            origin: 'https://y.qq.com',
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }).then(response => {
+          res.json(response.data)
+        }).catch(e => {
+          console.log(e)
+        })
+      })
+
+      app.get('/api/getTopListSong', function (req, res) {
+        const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
+        axios.get(url, {
+          headers: {
+            referer: 'https://y.qq.com',
+            origin: 'https://y.qq.com'
+          },
+          params: req.query
+        }).then(response => {
+          res.json(response.data)
+        }).catch(e => {
+          console.log(e)
+        })
+      })
+
+      app.get('/api/getSearchHot', function (req, res) {
+        const url = 'https://c.y.qq.com/splcloud/fcgi-bin/gethotkey.fcg'
+        axios.get(url, {
+          headers: {
+            referer: 'https://y.qq.com',
+            origin: 'https://y.qq.com'
+          },
+          params: req.query
+        }).then(response => {
+          res.json(response.data)
+        }).catch(e => {
+          console.log(e)
+        })
+      })
+
+      app.get('/api/getSearch', function (req, res) {
+        const url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
+        axios.get(url, {
+          headers: {
+            referer: 'https://y.qq.com',
+            origin: 'https://y.qq.com'
           },
           params: req.query
         }).then(response => {

@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@better-scroll/core": "^2.0.0-beta.2",
+    "body-parser": "^1.19.0",
     "core-js": "^2.6.5",
     "create-keyframe-animation": "^0.1.0",
     "js-base64": "^2.5.1",

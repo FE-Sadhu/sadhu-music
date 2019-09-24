@@ -99,7 +99,9 @@ export default {
       //   }, 20)
       // } // 第一张图片加载完后，下一轮tick(20ms后)，后面的图片竟然还没加载完。。。
       setTimeout(() => {
-        this.$refs.scroll.refresh()
+        if (this.$refs.scroll) {
+          this.$refs.scroll.refresh()
+        }
       }, 20)
     },
     ...mapMutations({
