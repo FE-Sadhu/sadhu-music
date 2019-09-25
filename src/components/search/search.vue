@@ -3,21 +3,38 @@
     <div class="search-box-wrapper">
       <search-box ref="searchBox" @query="onQueryChange"></search-box>
     </div>
-    <div class="shortcut-wrapper" v-show="!query">
-      <div class="shortcut">
-        <div class="hot-key">
-          <h1 class="title">热门搜索</h1>
-          <ul>
-            <li @click="addQuery(item.k)" class="item" v-for="(item, index) in hotKey" :key="index">
-              <span>{{item.k}}</span>
-            </li>
-          </ul>
+    <div class="shortcut-wrapper" ref="shorcutWrapper" v-show="!query">
+      <scroll class="shortcut" ref="shortcut" :data='listenData'>
+        <div>
+          <div class="hot-key">
+            <h1 class="title">热门搜索</h1>
+            <ul>
+              <li @click="addQuery(item.k)" class="item" v-for="(item, index) in hotKey" :key="index">
+                <span>{{item.k}}</span>
+              </li>
+            </ul>
+          </div>
+          <div class="search-history" v-show="searchHistory.length">
+            <h1 class="title">
+              <span class="text">搜索历史</span>
+              <span class="clear" @click="showConfirm">
+                <i class="icon-clear"></i>
+              </span>
+            </h1>
+            <search-list @delete="deleteOne" @select="addQuery" :searches="searchHistory"></search-list>
+          </div>
         </div>
-      </div>
+      </scroll>
     </div>
-    <div class="search-result" v-show="query">
-      <suggest @select="saveSearch" @listScroll="blurInput" :query="query"></suggest>
+    <div ref="searchResult" class="search-result" v-show="query">
+      <suggest ref="suggest" @select="saveSearch" @listScroll="blurInput" :query="query"></suggest>
     </div>
+    <confirm
+      ref="confirm"
+      title="是否清空所有搜索历史"
+      confirmBtnText='清空'
+      @confirm="clearSearchHistory"
+    ></confirm>
     <router-view></router-view>
   </div>
 </template>
@@ -25,26 +42,51 @@
 <script>
 import SearchBox from 'base/search-box/search-box'
 import Suggest from 'components/suggest/suggest'
+import SearchList from 'base/search-list/search-list'
+import Confirm from 'base/confirm/confirm'
+import Scroll from 'base/scroll/scroll'
 import { getSearchHot } from 'api/search'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+import { playlistMixin } from 'common/js/mixin'
 
 export default {
+  mixins: [playlistMixin],
   data () {
     return {
       hotKey: [],
       query: ''
     }
   },
+  computed: {
+    listenData () {
+      return this.hotKey.concat(this.searchHistory)
+    },
+    ...mapGetters([
+      'searchHistory'
+    ])
+  },
   created () {
     this._getHot()
   },
   methods: {
+    handlePlayList (playlist) {
+      const bottom = playlist.length > 0 ? '60px' : ''
+
+      this.$refs.shorcutWrapper.style.bottom = bottom
+      this.$refs.shortcut.refresh()
+
+      this.$refs.searchResult.style.bottom = bottom
+      this.$refs.suggest.refresh()
+    },
     onQueryChange (newQuery) {
       console.log(newQuery)
       this.query = newQuery
     },
     addQuery (query) {
       this.$refs.searchBox.setQuery(query)
+    },
+    deleteOne (item) {
+      this.deleteSearchHistory(item)
     },
     _getHot () {
       getSearchHot().then(res => {
@@ -57,19 +99,37 @@ export default {
     saveSearch () {
       this.saveSearchHistory(this.query)
     },
+    showConfirm () {
+      this.$refs.confirm.show()
+    },
     ...mapActions([
-      'saveSearchHistory'
+      'saveSearchHistory',
+      'deleteSearchHistory',
+      'clearSearchHistory'
     ])
+  },
+  watch: {
+    query (newQuery) {
+      if (!newQuery) {
+        setTimeout(() => {
+          this.$refs.shortcut.refresh()
+        }, 20)
+      }
+    }
   },
   components: {
     SearchBox,
-    Suggest
+    Suggest,
+    SearchList,
+    Confirm,
+    Scroll
   }
 }
 </script>
 
 <style lang="stylus" scoped>
 @import '~common/stylus/variable'
+@import '~common/stylus/mixins'
 
 .search
   .search-box-wrapper
@@ -96,6 +156,22 @@ export default {
           background $color-highlight-background
           font-size $font-size-medium
           color $color-text-d
+      .search-history
+        position relative
+        margin 0 20px
+        .title
+          display flex
+          align-items center
+          height 40px
+          font-size $font-size-medium
+          color $color-text-l
+          .text
+            flex 1
+          .clear
+            extend-click()
+            .icon-clear
+              font-size $font-size-medium
+              color $color-text-d
   .search-result
     position fixed
     width 100%

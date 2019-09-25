@@ -17,6 +17,12 @@ function insertArray (arr, val, compare, maxLen) {
   }
 }
 
+function deleteFromArray (arr, compare) {
+  const index = arr.findIndex(compare)
+  if (index > -1) {
+    arr.splice(index, 1)
+  }
+}
 export function saveSearch (query) { // 把 query 存在本地 localstorage 中，存完后返回所有历史 query 组成的数组
   let searches = storage.get(SEARCH_KEY, []) // 默认值空数组
   insertArray(searches, query, (item) => {
@@ -28,4 +34,18 @@ export function saveSearch (query) { // 把 query 存在本地 localstorage 中�
 
 export function loadSearch () {
   return storage.get(SEARCH_KEY, [])
+}
+
+export function deleteSearch (query) {
+  let searches = storage.get(SEARCH_KEY, [])
+  deleteFromArray(searches, (item) => {
+    return item === query
+  })
+  storage.set(SEARCH_KEY, searches)
+  return searches
+}
+
+export function clearSearch () {
+  storage.remove(SEARCH_KEY)
+  return []
 }

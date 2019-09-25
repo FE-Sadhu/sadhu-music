@@ -117,6 +117,9 @@ export default {
         this._checkMore(res.data)
       })
     },
+    refresh () {
+      this.$refs.suggest.refresh() // 给上层调用
+    },
     listScroll () {
       this.$emit('listScroll')
     },
