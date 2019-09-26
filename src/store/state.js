@@ -11,7 +11,8 @@ const state = {
   currentIndex: -1, // 当前播放的索引 =》 (控制前进后退播放那些的)
   disc: {},
   topList: [],
-  searchHistory: loadSearch()
+  searchHistory: loadSearch(),
+  playHistory: []
 }
 
 export default state

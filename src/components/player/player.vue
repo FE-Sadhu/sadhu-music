@@ -96,11 +96,12 @@
             <i @click.stop="togglePlaying" class="icon-mini" :class="miniIcon"></i>
           </progress-circle>
         </div>
-        <div class="control" @click="showPlayList">
+        <div class="control" @click.stop="showPlayList">
           <i class="icon-playlist"></i>
         </div>
       </div>
     </transition>
+    <playlist ref="playlist"></playlist>
     <audio ref="audio"
       @canplay="ready"
       @error="error"
@@ -112,20 +113,23 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
-import animations from 'create-keyframe-animation' // 第三方库，用来让js创建css3动画
-import { prefixStyle } from 'common/js/dom'
-import ProgressBar from 'base/progress-bar/progress-bar'
-import ProgressCircle from 'base/progress-circle/progress-circle'
-import { playMode } from 'common/js/config'
-import { shuffle } from 'common/js/utils'
-import Lyric from 'lyric-parser'
 import Scroll from 'base/scroll/scroll'
+import ProgressBar from 'base/progress-bar/progress-bar'
+import Playlist from 'components/playlist/playlist'
+import ProgressCircle from 'base/progress-circle/progress-circle'
+import animations from 'create-keyframe-animation' // 第三方库，用来让js创建css3动画
+import Lyric from 'lyric-parser'
+import { prefixStyle } from 'common/js/dom'
+// import { shuffle } from 'common/js/utils'
+import { playMode } from 'common/js/config'
+import { mapGetters, mapMutations } from 'vuex'
+import { playerMixin } from 'common/js/mixin'
 
 const transform = prefixStyle('transform')
 const transitionDuration = prefixStyle('transitionDuration')
 
 export default {
+  mixins: [playerMixin],
   data () {
     return {
       readyState: false,
@@ -148,11 +152,7 @@ export default {
       this.setFullScreen(true)
     },
     ...mapMutations({
-      setFullScreen: 'SET_FULL_SCREEN',
-      setPlayingState: 'SET_PLAYING_STATE',
-      setCurrentIndex: 'SET_CURRENT_INDEX',
-      setPlayMode: 'SET_PLAY_MODE',
-      setPlayList: 'SET_PLAYLIST'
+      setFullScreen: 'SET_FULL_SCREEN'
     }),
     enter (el, done) { // 动画执行完了就执行 done 函数， done 回调函数执行的时候，进入到下一个钩子函数
       const { x, y, scale } = this._getPosAndScale()
@@ -408,33 +408,14 @@ export default {
       this.$refs.middleL.style[transitionDuration] = `${time}ms`
       this.touch.initiated = false
     },
-    changeMode () {
-      const mode = (this.mode + 1) % 3 // 因为就只有三种 mode
-      this.setPlayMode(mode)
-      let list = null
-      if (mode === playMode.random) {
-        list = shuffle(this.sequenceList)
-      } else {
-        list = this.playList
-      }
-      this.resetCurrentIndex(list)
-      this.setPlayList(list) // playList变了，currentSong也会变，所以要同步改变currentIndex来保证切换时歌曲不会变
-      // console.log(this.currentSong, this.currentIndex, this.playList)
-    },
-    resetCurrentIndex (list) {
-      let index = list.findIndex((item) => {
-        return item.id === this.currentSong.id
-      })
-      this.setCurrentIndex(index)
+    showPlayList () {
+      this.$refs.playlist.show()
     },
     /**
      * 计算内层Image的transform，并同步到外层容器，这样在暂停的时候，cd 就会停在原本 rotate 的位置
      * @param wrapper
      * @param inner
      */
-    showPlayList () {
-
-    },
     syncWrapperTransform (wrapper, inner) {
       if (!this.$refs[wrapper]) {
         return
@@ -459,25 +440,18 @@ export default {
     percent () {
       return this.currentTime / this.currentSong.duration
     },
-    iconMode () {
-      return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
-    },
     ...mapGetters([
       'fullScreen',
-      'playList',
-      'currentSong',
       'playing',
-      'currentIndex',
-      'mode',
-      'sequenceList'
+      'currentIndex'
     ])
   },
   watch: {
     currentSong (newSong, oldSong) {
-      console.log(newSong.url, 1)
-      console.log(setTimeout(() => {
-        console.log(newSong.url)
-      }, 3000))
+      // console.log(newSong.url, 1)
+      if (!newSong.id) { // 当在 playlist 组件中删掉最后一首歌时
+        return
+      }
       if (newSong.id === oldSong.id) {
         return
       }
@@ -535,7 +509,8 @@ export default {
   components: {
     ProgressBar,
     ProgressCircle,
-    Scroll
+    Scroll,
+    Playlist
   }
 }
 </script>
