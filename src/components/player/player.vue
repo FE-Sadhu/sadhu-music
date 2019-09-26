@@ -122,7 +122,7 @@ import Lyric from 'lyric-parser'
 import { prefixStyle } from 'common/js/dom'
 // import { shuffle } from 'common/js/utils'
 import { playMode } from 'common/js/config'
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 import { playerMixin } from 'common/js/mixin'
 
 const transform = prefixStyle('transform')
@@ -154,6 +154,9 @@ export default {
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN'
     }),
+    ...mapActions([
+      'savePlayHistory'
+    ]),
     enter (el, done) { // 动画执行完了就执行 done 函数， done 回调函数执行的时候，进入到下一个钩子函数
       const { x, y, scale } = this._getPosAndScale()
 
@@ -274,11 +277,12 @@ export default {
       // 监听 playing 这个事件可以确保慢网速或者快速切换歌曲导致的 DOM Exception
       this.readyState = true
       this.canLyricPlay = true
-      // this.savePlayHistory(this.currentSong)
       // 如果歌曲的播放晚于歌词的出现，播放的时候需要同步歌词
       if (this.currentLyric) {
         this.currentLyric.seek(this.currentTime * 1000)
       }
+      // 这是一个 action ，把播放的歌曲存进 vuex 和 本地，供 add-song 组件使用
+      this.savePlayHistory(this.currentSong)
     },
     paused () {
       this.setPlayingState(false)

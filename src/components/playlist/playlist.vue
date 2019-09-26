@@ -11,7 +11,8 @@
             </span>
           </h1>
         </div>
-        <scroll ref="listContent" class="list-content" :data="sequenceList">
+        <scroll ref="listContent" class="list-content" :data="sequenceList" :refreshDelay="refreshDelay">
+          <!-- 添加歌曲时候，这动画花100ms，然而上层 scroll 传 data refresh 只有20ms，所以 scroll 重新计算 DOM 高度算不对，所以我们要延迟计算 DOM 高度-->
           <transition-group ref="list" name="list" tag="ul">
             <li
               class="item"
@@ -59,7 +60,8 @@ export default {
   mixins: [playerMixin],
   data () {
     return {
-      showFlag: false
+      showFlag: false,
+      refreshDelay: 100
     }
   },
   computed: {
@@ -91,7 +93,7 @@ export default {
         })
       }
       this.setCurrentIndex(index)
-      // this.setPlayingState(true)
+      this.setPlayingState(true)
     },
     scrollToCurrent (current) {
       const index = this.sequenceList.findIndex((item) => {
@@ -126,8 +128,11 @@ export default {
       if (!this.showFlag || newSong.id === oldSong.id) {
         return
       }
-      this.scrollToCurrent(newSong)
-      this.setPlayingState(true)
+
+      setTimeout(() => {
+        this.scrollToCurrent(newSong)
+      }, 20)
+      // this.setPlayingState(true)
     }
   },
   components: {
