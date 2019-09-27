@@ -2,6 +2,9 @@
   <div class="header">
     <div class="icon"></div>
     <h1 class="text">Sadhu Music</h1>
+    <router-link to="/user" class="mine" tag="div">
+      <i class="icon-mine"></i>
+    </router-link>
   </div>
 </template>
 
@@ -33,4 +36,13 @@ export default {
       font-size $font-size-large
       line-height 44px
       vertical-align top
+    .mine
+      position: absolute
+      top: 0
+      right: 0
+      .icon-mine
+        display: block
+        padding: 12px
+        font-size: 20px
+        color: $color-theme
 </style>
