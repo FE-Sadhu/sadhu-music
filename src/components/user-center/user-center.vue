@@ -5,7 +5,7 @@
         <i class="icon-back"></i>
       </div>
       <div class="switches-wrapper">
-
+        <switches @switch="switchItem" :switches="switches" :currentIndex="currentIndex"></switches>
       </div>
       <div class="play-btn">
         <i class="icon-play"></i>
@@ -19,11 +19,28 @@
 </template>
 
 <script>
+import Switches from 'base/switches/switches'
+
 export default {
+  data () {
+    return {
+      currentIndex: 0,
+      switches: [
+        { name: '我喜欢的' },
+        { name: '最近听的' }
+      ]
+    }
+  },
   methods: {
     back () {
       this.$router.back()
+    },
+    switchItem (index) {
+      this.currentIndex = index
     }
+  },
+  components: {
+    Switches
   }
 }
 </script>
