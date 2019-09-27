@@ -7,7 +7,7 @@
       <span class="link">歌手</span>
     </router-link>
     <router-link tag="div" class="item" to="/rank">
-      <span class="link">排行</span>
+      <span class="link">榜单</span>
     </router-link>
     <router-link tag="div" class="item" to="/search">
       <span class="link">搜索</span>

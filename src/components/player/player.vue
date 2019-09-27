@@ -103,7 +103,7 @@
     </transition>
     <playlist ref="playlist"></playlist>
     <audio ref="audio"
-      @canplay="ready"
+      @playing="ready"
       @error="error"
       @timeupdate="updateTime"
       @ended="end"
@@ -242,6 +242,7 @@ export default {
       }
       if (this.playList.length === 1) {
         this.loop()
+        return
       } else {
         let index = this.currentIndex - 1
         if (index === -1) {
@@ -260,6 +261,7 @@ export default {
       }
       if (this.playList.length === 1) {
         this.loop()
+        return
       } else {
         let index = this.currentIndex + 1
         if (index === this.playList.length) {
@@ -323,11 +325,11 @@ export default {
     },
     getLyric () {
       this.currentSong.getSongLyric().then(lyric => {
-        if (this.currentSong.lyric !== lyric) {
+        if (this.currentSong.lyric !== lyric) { // 防止切换过快，停下来时异步请求了多个歌词
           return
         }
         this.currentLyric = new Lyric(lyric, this.handleLyric)
-        if (this.playing) {
+        if (this.playing && this.canLyricPlay) {
           this.currentLyric.play()
         }
       }).catch(() => {
