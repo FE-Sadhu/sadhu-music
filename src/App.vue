@@ -1,8 +1,10 @@
 <template>
-  <div id="app">
+  <div id="app" @touchmove.prevent>
     <m-header></m-header>
     <tab></tab>
-    <router-view></router-view>
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
     <player></player>
   </div>
 </template>
@@ -22,8 +24,4 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import "~common/stylus/variable"
-#app
-  background: $color-background
-  color white
 </style>

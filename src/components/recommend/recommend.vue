@@ -150,20 +150,25 @@ export default {
         font-size 14px
       .item-list
         display flex
-        padding 0 20px 20px
+        box-sizing: border-box
+        align-items: center
+        padding: 0 20px 20px 20px
         .avatar
           flex: 0 0 60px
           padding-right 20px
           .image
             width 100%
         .text
-          flex 1
-          display flex
-          flex-direction column
-          justify-content center
-          font-size 14px
+          display: flex
+          flex-direction: column
+          justify-content: center
+          flex: 1
+          line-height: 20px
+          overflow: hidden
+          font-size: $font-size-medium
           .name
             margin-bottom 10px
+            color: $color-text
           .desc
             color $color-text-d
     .loading-container
