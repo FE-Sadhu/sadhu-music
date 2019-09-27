@@ -80,8 +80,10 @@ export function saveLoveList (song) {
 }
 
 export function deleteLoveList (song) {
-  let songs = storage.get(FAVORITE_KEY)
-  deleteFromArray(songs)
+  let songs = storage.get(FAVORITE_KEY, [])
+  deleteFromArray(songs, (item) => {
+    return item.id === song.id
+  })
   storage.set(FAVORITE_KEY, songs)
   return songs
 }
