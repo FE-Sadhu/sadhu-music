@@ -1,42 +1,48 @@
 <template>
-  <div class="search">
-    <div class="search-box-wrapper">
-      <search-box ref="searchBox" @query="onQueryChange"></search-box>
-    </div>
-    <div class="shortcut-wrapper" ref="shorcutWrapper" v-show="!query">
-      <scroll :refreshDelay="refreshDelay" class="shortcut" ref="shortcut" :data='listenData'>
-        <div>
-          <div class="hot-key">
-            <h1 class="title">热门搜索</h1>
-            <ul>
-              <li @click="addQuery(item.k)" class="item" v-for="(item, index) in hotKey" :key="index">
-                <span>{{item.k}}</span>
-              </li>
-            </ul>
+  <transition appear name="slide">
+    <div class="search">
+      <div class="back" @click="back">
+        <i class="icon-back"></i>
+      </div>
+      <h1 class="head-title">搜你想搜~</h1>
+      <div class="search-box-wrapper">
+        <search-box ref="searchBox" @query="onQueryChange"></search-box>
+      </div>
+      <div class="shortcut-wrapper" ref="shorcutWrapper" v-show="!query">
+        <scroll :refreshDelay="refreshDelay" class="shortcut" ref="shortcut" :data='listenData'>
+          <div>
+            <div class="hot-key">
+              <h1 class="title">热门搜索</h1>
+              <ul>
+                <li @click="addQuery(item.k)" class="item" v-for="(item, index) in hotKey" :key="index">
+                  <span>{{item.k}}</span>
+                </li>
+              </ul>
+            </div>
+            <div class="search-history" v-show="searchHistory.length">
+              <h1 class="title">
+                <span class="text">搜索历史</span>
+                <span class="clear" @click="showConfirm">
+                  <i class="icon-clear"></i>
+                </span>
+              </h1>
+              <search-list @delete="deleteOne" @select="addQuery" :searches="searchHistory"></search-list>
+            </div>
           </div>
-          <div class="search-history" v-show="searchHistory.length">
-            <h1 class="title">
-              <span class="text">搜索历史</span>
-              <span class="clear" @click="showConfirm">
-                <i class="icon-clear"></i>
-              </span>
-            </h1>
-            <search-list @delete="deleteOne" @select="addQuery" :searches="searchHistory"></search-list>
-          </div>
-        </div>
-      </scroll>
+        </scroll>
+      </div>
+      <div ref="searchResult" class="search-result" v-show="query">
+        <suggest ref="suggest" @select="saveSearch" @listScroll="blurInput" :query="query"></suggest>
+      </div>
+      <confirm
+        ref="confirm"
+        title="是否清空所有搜索历史"
+        confirmBtnText='清空'
+        @confirm="clearSearchHistory"
+      ></confirm>
+      <router-view></router-view>
     </div>
-    <div ref="searchResult" class="search-result" v-show="query">
-      <suggest ref="suggest" @select="saveSearch" @listScroll="blurInput" :query="query"></suggest>
-    </div>
-    <confirm
-      ref="confirm"
-      title="是否清空所有搜索历史"
-      confirmBtnText='清空'
-      @confirm="clearSearchHistory"
-    ></confirm>
-    <router-view></router-view>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -74,6 +80,9 @@ export default {
 
       this.$refs.searchResult.style.bottom = bottom
       this.$refs.suggest.refresh()
+    },
+    back () {
+      this.$router.back()
     },
     deleteOne (item) {
       this.deleteSearchHistory(item)
@@ -114,11 +123,45 @@ export default {
 @import '~common/stylus/mixins'
 
 .search
+  position absolute
+  top 0
+  bottom 0
+  width 100%
+  z-index 100
+  background $color-background
+  &.slide-enter-active, &.slide-leave-active
+    transition all 0.3s
+  &.slide-enter, &.slide-leave-to
+    opacity 0
+    transform translate3d(100%, 0, 0)
+  .back
+    position absolute
+    top 0
+    left 6px
+    z-index 50
+    .icon-back
+      display block
+      transform rotate(180deg)
+      padding 10px
+      font-size $font-size-large-x
+      color $color-theme
+  .head-title
+    position absolute
+    top 0
+    left 10%
+    z-index 40
+    width 80%
+    height 40px
+    line-height 40px
+    text-align center
+    font-size $font-size-large
+    color $color-text
+    no-wrap()
   .search-box-wrapper
-    margin 20px
+    margin 60px 20px 20px 20px
   .shortcut-wrapper
     position fixed
-    top 178px
+    top 138px
     bottom 0
     width 100%
     .shortcut
@@ -157,6 +200,6 @@ export default {
   .search-result
     position fixed
     width 100%
-    top 178px
+    top 120px
     bottom 0
 </style>

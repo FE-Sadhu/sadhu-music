@@ -40,7 +40,7 @@ import { createSong, isValidMusic, processSongsUrl } from 'common/js/song'
 import { mapMutations, mapActions } from 'vuex'
 
 const TYPE_SINGER = 'singer'
-const perpage = 20 // 每一页返回的歌曲个数
+const perpage = 30 // 每一页返回的歌曲个数
 
 export default {
   props: {
