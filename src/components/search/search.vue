@@ -172,15 +172,15 @@ export default {
         .title
           margin-bottom 20px
           font-size $font-size-medium
-          color $color-text-l
+          color $color-text-g
         .item
           display inline-block
           padding 5px 10px
           margin 0 20px 10px 0
-          border-radius 6px
-          background $color-highlight-background
+          border-radius 32px
+          border 1px solid #d3d4da
           font-size $font-size-medium
-          color $color-text-d
+          color $color-text
       .search-history
         position relative
         margin 0 20px
@@ -189,14 +189,13 @@ export default {
           align-items center
           height 40px
           font-size $font-size-medium
-          color $color-text-l
+          color $color-text-g
           .text
             flex 1
           .clear
             extend-click()
             .icon-clear
               font-size $font-size-medium
-              color $color-text-d
   .search-result
     position fixed
     width 100%

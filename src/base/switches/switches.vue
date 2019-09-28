@@ -42,15 +42,15 @@ export default {
   align-items center
   width 240px
   margin 0 auto
-  border 1px solid $color-highlight-background
+  border 1px solid $color-text-g
   border-radius 5px
   .switch-item
     flex 1
     padding 8px
     text-align center
     font-size $font-size-medium
-    color $color-text-d
+    color $color-text
     &.active
-      background: $color-highlight-background
+      background: $color-text-g
       color: $color-text
 </style>

@@ -181,7 +181,7 @@ export default {
         index = this.listHeight.length - 2
       }
       this.scrollY = this.listHeight[index]
-      this.$refs.scroll.scrollToElement(this.$refs.listGroup[index], 500)
+      this.$refs.scroll.scrollToElement(this.$refs.listGroup[index], 300)
     },
     _calculateHeight () {
       const list = this.$refs.listGroup
@@ -265,9 +265,9 @@ export default {
         height 30px
         line-height 30px
         padding-left 20px
-        font-size $font-size-small
-        color $color-text-l
-        background $color-highlight-background
+        font-size $font-size-medium
+        color #ffffff
+        background #D3D3D3
       .item
         display flex
         align-items center
@@ -280,7 +280,7 @@ export default {
         .name
           flex 1
           margin-left 20px
-          color $color-text-l
+          color $color-text
           font-size $font-size-medium
   .list-shortcut
     position absolute
@@ -312,9 +312,9 @@ export default {
       height 30px
       line-height 30px
       padding-left 20px
-      font-size $font-size-small
-      color $color-text-l
-      background $color-highlight-background
+      font-size $font-size-medium
+      color #fff
+      background #D3D3D3
   .loading
     position absolute
     width 100%

@@ -169,7 +169,8 @@ export default {
     left 0
     bottom 0
     width 100%
-    background $color-highlight-background
+    border-radius 8px
+    background $color-background
     .list-header
       position relative
       padding 20px 30px 10px 20px
@@ -179,16 +180,16 @@ export default {
         .icon
           margin-right 10px
           font-size 30px
-          color $color-theme-d
+          color $color-text-g
         .text
           flex 1
           font-size $font-size-medium
-          color $color-text-l
+          color $color-text
         .clear
           extend-click()
           .icon-clear
             font-size $font-size-medium
-            color $color-text-d
+            color $color-text-g
     .list-content
       max-height 240px
       overflow hidden
@@ -206,12 +207,12 @@ export default {
           flex 0 0 20px
           width 20px
           font-size $font-size-small
-          color: $color-theme-d
+          color: $color-sub-theme
         .text
           flex 1
           no-wrap()
           font-size: $font-size-medium
-          color: $color-text-d
+          color: $color-text
         .like
           extend-click()
           margin-right 15px
@@ -230,9 +231,9 @@ export default {
         display flex
         align-items center
         padding 8px 16px
-        border 1px solid $color-text-l
+        border 1px solid $color-text-g
         border-radius 100px
-        color $color-text-l
+        color $color-text-g
         .icon-add
           margin-right 5px
           font-size: $font-size-small-s
@@ -241,7 +242,7 @@ export default {
     .list-close
       text-align: center
       line-height: 50px
-      background: $color-background
+      background: #D3D3D3
       font-size: $font-size-medium-x
-      color: $color-text-l
+      color: $color-text
 </style>

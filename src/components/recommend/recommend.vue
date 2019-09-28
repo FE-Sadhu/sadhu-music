@@ -2,6 +2,7 @@
   <div class="recommend-wrapper" ref="recommendWrapper">
     <scroll ref="scroll" class="recommend-content" :data="lists">
       <div class="test-two" v-show="lists.length">
+        <div class="decorate"></div>
         <div v-if="sliders.length" class="slide-wrapper">
           <swiper :options="swiperOption">
               <swiper-slide v-for="item in sliders" :key="item.id">
@@ -11,7 +12,7 @@
             </swiper>
         </div>
         <div class="recommend-list">
-          <h1 class="list-title">热门歌单推荐</h1>
+          <h1 class="list-title">推荐歌单</h1>
           <ul>
             <li
               v-for="item in lists"
@@ -127,6 +128,13 @@ export default {
   overflow hidden
   .recommend-content
     height 100% // 继承了 wrapper
+    .decorate
+      position absolute
+      top -34vh
+      z-index -10
+      background $color-theme
+      width 100%
+      height 50vh
     .slide-wrapper >>> .swiper-pagination-bullet
       background rgb(255, 255, 255)
       opacity 0.6
@@ -135,9 +143,11 @@ export default {
       opacity 0.9
     .slide-wrapper
       overflow hidden
-      width 100%
+      width 96%
       height 0
       padding-bottom 40%
+      margin 0 auto
+      border-radius 5px
       img
         width 100%
     .recommend-list
@@ -145,8 +155,10 @@ export default {
       .list-title
         height 65px
         line-height 65px
-        text-align center
-        color $color-theme
+        text-align left
+        padding-left 20px
+        color $color-text
+        font-weight bold
         font-size 14px
       .item-list
         display flex
@@ -168,9 +180,10 @@ export default {
           font-size: $font-size-medium
           .name
             margin-bottom 10px
+            font-size: $font-size-medium-x
             color: $color-text
           .desc
-            color $color-text-d
+            color $color-text-g
     .loading-container
       position absolute
       width 100%

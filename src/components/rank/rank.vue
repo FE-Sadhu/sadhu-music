@@ -99,17 +99,21 @@ export default {
     .toplist
       height 100%
       overflow hidden
+      padding-top 5px
       .item
         display flex
-        margin 0 20px
-        padding-top 20px
+        margin 0 10px
+        padding 3px 0
         height 100px
+        border-bottom: 1px solid rgb(228, 228, 228);
         &:last-child
           padding-bottom 20px
         .icon
           flex 0 0 100px
           width 100px
           height 100px
+          img
+            border-radius 3px
         .songlist
           flex 1
           display flex
@@ -118,12 +122,12 @@ export default {
           padding 0 20px
           height 100px
           overflow hidden
-          background $color-highlight-background
-          color $color-text-d
-          font-size $font-size-small
+          // background $color-highlight-background
+          color $color-text
+          font-size $font-size-small-s
           .song
             no-wrap()
-            line-height 26px
+            line-height 30px
       .loading-container
         position: absolute
         width: 100%

@@ -49,21 +49,22 @@ export default {
     width 100%
     padding 0 6px
     height 40px
-    background $color-highlight-background
-    border-radius 6px
+    background #ebecec
+    border-radius 30px
     .icon-search
       font-size 24px
-      color $color-background
+      color $color-text-g
     .box
       flex 1
       margin 0 5px
       line-height 18px
-      background $color-highlight-background
-      color $color-text
-      font-size $font-size-medium
+      background transparent
+      color #2e3030
+      font-size $font-size-large
+      outline 0
       &::placeholder
-        color $color-text-d
+        font-size 14px
     .icon-dismiss
       font-size 16px
-      color $color-background
+      color $color-text-g
 </style>

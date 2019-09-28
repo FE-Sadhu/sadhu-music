@@ -23,22 +23,23 @@ export default {
     position relative
     height 44px
     text-align center
-    color $color-theme
+    background $color-theme
     font-size 0
     .icon
       display inline-block
       vertical-align top
       width 20px
-      height 22px
+      height 20px
       margin-top 10px
       margin-right 5px
       bg-image('logo')
-      background-size 20px 22px
+      background-size 20px 20px
     .text
       display inline-block
       font-size $font-size-large
       line-height 44px
       vertical-align top
+      color $color-text-l
     .search
       position absolute
       top 0
@@ -47,7 +48,7 @@ export default {
         display block
         padding 7px
         font-size 30px
-        color $color-theme
+        color $color-theme-l
     .mine
       position: absolute
       top: 0
@@ -56,5 +57,5 @@ export default {
         display: block
         padding: 12px
         font-size: 20px
-        color: $color-theme
+        color: $color-theme-l
 </style>

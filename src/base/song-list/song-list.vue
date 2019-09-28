@@ -57,7 +57,7 @@ export default {
 
   .li-item
     display flex
-    font-size $font-size-medium
+    font-size $font-size-large
     height 64px
     box-sizing border-box
     align-items center
@@ -78,7 +78,7 @@ export default {
         &.icon2
           bg-image('third')
       .text
-        color $color-theme
+        color #999999
         font-size $font-size-large
     .content
       flex 1
@@ -89,6 +89,7 @@ export default {
         color $color-text
       .desc
         no-wrap()
+        font-size $font-size-small
         margin-top 4px
-        color $color-text-d
+        color $color-text-g
 </style>

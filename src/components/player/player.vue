@@ -533,7 +533,7 @@ export default {
       top 0
       bottom 0
       z-index 150
-      background $color-background
+      background #222
       .background
         position absolute
         left 0
@@ -555,7 +555,7 @@ export default {
             display block
             padding 9px
             font-size $font-size-large-x
-            color $color-theme
+            color $color-text-l
             transform rotate(-90deg)
         .title
           width 70%
@@ -565,13 +565,13 @@ export default {
           text-align center
           no-wrap()
           font-size $font-size-large
-          color $color-text
+          color $color-text-l
         .subtitle
           height 20px
           line-height 20px
           text-align center
           font-size $font-size-medium
-          color $color-text
+          color $color-text-l
       .middle
         position fixed
         width 100%
@@ -617,7 +617,7 @@ export default {
               height: 20px
               line-height: 20px
               font-size: $font-size-medium
-              color: $color-text-l
+              color: rgba(255, 255, 255, 0.5)
         .middle-r
           display inline-block
           vertical-align top
@@ -631,10 +631,10 @@ export default {
             text-align center
             .text
               line-height 32px
-              color $color-text-l
+              color rgba(255, 255, 255, 0.5)
               font-size $font-size-medium
               &.current
-                color $color-text
+                color #fff
       .bottom
         position absolute
         bottom 50px
@@ -649,7 +649,7 @@ export default {
             width: 8px
             height: 8px
             border-radius: 50%
-            background: $color-text-l
+            background: rgba(255, 255, 255, 0.5)
             &.active
               width: 20px
               border-radius: 5px
@@ -661,7 +661,7 @@ export default {
           margin 0 auto
           padding 10px 0
           .time
-            color $color-text
+            color $color-text-l
             font-size $font-size-small
             flex 0 0 30px
             line-height 30px
@@ -677,7 +677,7 @@ export default {
           align-items center
           .icon
             flex 1
-            color $color-theme
+            color $color-text-l
             i
               font-size 30px
           .i-left
@@ -710,7 +710,8 @@ export default {
       z-index 180
       width 100%
       height 60px
-      background $color-highlight-background
+      background #F5F5F5
+      border-top 1px solid $color-text-gg
       &.mini-enter-active, &.mini-leave-active
         transition all 0.4s
       &.mini-enter, &.mini-leave-to
@@ -742,14 +743,14 @@ export default {
         .desc
           no-wrap()
           font-size $font-size-small
-          color $color-text-d
+          color $color-text-g
       .control
         flex 0 0 30px
         width 30px
         padding 0 10px
         .icon-play-mini, .icon-pause-mini, .icon-playlist
           font-size: 30px
-          color: $color-theme-d
+          color: rgba(212, 68, 57, 0.5)
         .icon-mini
           font-size: 32px
           position absolute

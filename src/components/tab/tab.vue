@@ -24,14 +24,16 @@ export default {
     height 44px
     line-height 44px
     font-size $font-size-medium
+    background $color-theme
     .item
       flex 1
       text-align center
-      color $color-text-l
+      color $color-text-lm
       .link
         padding 5px 0
     .router-link-active
-      color $color-theme
+      color $color-text-l
       .link
-        border-bottom 2px solid $color-theme
+        font-weight bold
+        border-bottom 2px solid $color-text-l
 </style>

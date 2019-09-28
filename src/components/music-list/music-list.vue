@@ -173,7 +173,7 @@ export default {
       display block
       padding 10px
       font-size $font-size-large-x
-      color $color-theme
+      color #fff
   .title
     position absolute
     top 0
@@ -184,7 +184,7 @@ export default {
     line-height 40px
     text-align center
     font-size $font-size-large
-    color $color-text
+    color #fff
     no-wrap()
   .bgImage
     position relative
@@ -204,8 +204,8 @@ export default {
         padding 7px 0
         margin 0 auto
         text-align center
-        border 1px solid $color-theme
-        color $color-theme
+        border 1px solid #fff
+        color #fff
         border-radius 100px
         font-size 0
         .icon-play

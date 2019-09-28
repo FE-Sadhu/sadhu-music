@@ -111,7 +111,7 @@ export default {
           box-sizing border-box
           width 16px
           height 16px
-          border 3px solid $color-text
+          border 5px solid $color-text-l
           border-radius 50%
           background $color-theme
 </style>
