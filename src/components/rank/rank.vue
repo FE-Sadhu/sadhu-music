@@ -8,7 +8,7 @@
           </div>
           <ul class="songlist">
             <li class="song" v-for="song in item.songList" :key="song.rank">
-              <span>{{song.rank}} </span>
+              <span>{{song.rank}}</span>
               <span>{{song.title}}-{{song.singerName}}</span>
             </li>
           </ul>
@@ -61,16 +61,18 @@ export default {
       const ret = []
       list.forEach((items) => {
         items.toplist.forEach((item) => {
-          ret.push({
-            id: item.topId,
-            listenNum: item.listenNum,
-            picUrl: item.frontPicUrl,
-            songList: item.song,
-            topTitle: item.title,
-            type: item.topType,
-            avatar: item.mbFrontPicUrl,
-            period: item.period
-          })
+          if (item.title !== 'MV榜') {
+            ret.push({
+              id: item.topId,
+              listenNum: item.listenNum,
+              picUrl: item.frontPicUrl,
+              songList: item.song,
+              topTitle: item.title,
+              type: item.topType,
+              avatar: item.mbFrontPicUrl,
+              period: item.period
+            })
+          }
         })
       })
       return ret

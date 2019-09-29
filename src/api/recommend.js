@@ -19,8 +19,11 @@
 import axios from 'axios'
 import { commonParams } from './config'
 
+const debug = process.env.NODE_ENV !== 'production'
+
 export function getSlider () {
-  const url = '/api/getSlider'
+  const url = debug ? '/api/getSlider' : 'http://www.ptuyxr.cn/music/api/getSlider'
+  // const url = '/api/getSlider'
 
   const data = Object.assign({}, commonParams, {
     uin: 0,
@@ -36,7 +39,8 @@ export function getSlider () {
 }
 
 export function getList () {
-  const url = '/api/getList'
+  const url = debug ? '/api/getList' : 'http://www.ptuyxr.cn/music/api/getList'
+  // const url = '/api/getList'
 
   const data = Object.assign({}, commonParams, {
     picmid: 1,
@@ -58,7 +62,8 @@ export function getList () {
 }
 
 export function getDissSongList (id) {
-  const url = '/api/getDissSong'
+  const url = debug ? '/api/getDissSong' : 'http://www.ptuyxr.cn/music/api/getDissSong'
+  // const url = '/api/getDissSong'
 
   const data = {
     type: 1,

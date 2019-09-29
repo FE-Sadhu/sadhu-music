@@ -1,9 +1,11 @@
 import axios from 'axios'
-
 import { _paramsSerializer } from 'common/js/utils'
 
+const debug = process.env.NODE_ENV !== 'production'
+
 export function getSingerList () {
-  const url = '/api/getSingerList'
+  const url = debug ? '/api/getSingerList' : 'http://www.ptuyxr.cn/music/api/getSingerList'
+  // const url = '/api/getSingerList'
 
   const data = {
     '-': `getUCGI${Math.ceil(Math.random() * 10000000000000000)}`,
@@ -16,7 +18,6 @@ export function getSingerList () {
     notice: 0,
     platform: 'yqq.json',
     needNewCode: 0,
-    // data: `${encodeURIComponent('{"comm":{"ct":24,"cv":0},"singerList":{"module":"Music.SingerListServer","method":"get_singer_list","param":{"area":-100,"sex":-100,"genre":-100,"index":-100,"sin":0,"cur_page":1}}}')}`
     data: {
       'comm': {
         'ct': 24,
@@ -46,7 +47,8 @@ export function getSingerList () {
 }
 
 export function getSingerDetail (singerId) {
-  const url = '/api/getSingerDetail'
+  const url = debug ? '/api/getSingerDetail' : 'http://www.ptuyxr.cn/music/api/getSingerDetail'
+  // const url = '/api/getSingerDetail'
 
   const data = {
     '-': `getUCGI${Math.ceil(Math.random() * 10000000000000000)}`,

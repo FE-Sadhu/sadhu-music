@@ -1,7 +1,10 @@
 import axios from 'axios'
 
+const debug = process.env.NODE_ENV !== 'production'
+
 export function getSearchHot () {
-  const url = '/api/getSearchHot'
+  const url = debug ? '/api/getSearchHot' : 'http://www.ptuyxr.cn/music/api/getSearchHot'
+  // const url = '/api/getSearchHot'
 
   const data = {
     '_': +new Date(),
@@ -23,7 +26,8 @@ export function getSearchHot () {
 }
 
 export function getSearch (query, page, zhida, perpage) {
-  const url = '/api/getSearch'
+  const url = debug ? '/api/getSearch' : 'http://www.ptuyxr.cn/music/api/getSearch'
+  // const url = '/api/getSearch'
 
   const data = {
     _: +new Date(),

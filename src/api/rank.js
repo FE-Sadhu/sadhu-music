@@ -2,8 +2,11 @@
 import axios from 'axios'
 import { _paramsSerializer } from 'common/js/utils'
 
+const debug = process.env.NODE_ENV !== 'production'
+
 export function getRank () {
-  const url = '/api/getRank'
+  const url = debug ? '/api/getRank' : 'http://www.ptuyxr.cn/music/api/getRank'
+  // const url = '/api/getRank'
 
   const data = {
     "module": "musicToplist.ToplistInfoServer",
@@ -27,7 +30,8 @@ export function getRank () {
 }
 
 export function getTopListSong (id, period) {
-  const url = '/api/getTopListSong'
+  const url = debug ? '/api/getTopListSong' : 'http://www.ptuyxr.cn/music/api/getTopListSong'
+  // const url = '/api/getTopListSong'
 
   const data = {
     '-': `getUCGI${Math.ceil(Math.random() * 10000000000000000)}`,

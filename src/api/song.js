@@ -7,7 +7,8 @@ const ERR_OK = 0
 const debug = process.env.NODE_ENV !== 'production'
 
 export function getSongsUrl (songs) {
-  const url = debug ? '/api/getPurlUrl' : 'http://ustbhuangyi.com/music/api/getPurlUrl'
+  const url = debug ? '/api/getPurlUrl' : 'http://www.ptuyxr.cn/music/api/getPurlUrl'
+  // const url = '/api/getPurlUrl'
 
   let mids = []
   let types = []
@@ -88,7 +89,8 @@ function genUrlMid (mids, types) {
 }
 
 export function getLyric (mid) {
-  const url = '/api/lyric'
+  const url = debug ? '/api/lyric' : 'http://www.ptuyxr.cn/music/api/lyric'
+  // const url = '/api/lyric'
 
   const data = {
     g_tk: 1928093487,
