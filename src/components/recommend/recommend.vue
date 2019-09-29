@@ -125,9 +125,11 @@ export default {
   bottom 0
   left 0
   right 0
-  overflow hidden
+  // overflow: hidden
   .recommend-content
+    position relative
     height 100% // 继承了 wrapper
+    overflow: hidden
     .decorate
       position absolute
       top -34vh
@@ -135,6 +137,7 @@ export default {
       background $color-theme
       width 100%
       height 50vh
+      overflow hidden
     .slide-wrapper >>> .swiper-pagination-bullet
       background rgb(255, 255, 255)
       opacity 0.6
