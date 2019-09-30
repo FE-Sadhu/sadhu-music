@@ -4,7 +4,7 @@ import { _paramsSerializer } from 'common/js/utils'
 const debug = process.env.NODE_ENV !== 'production'
 
 export function getSingerList () {
-  const url = debug ? '/api/getSingerList' : 'http://www.ptuyxr.cn/music/api/getSingerList'
+  const url = debug ? '/api/getSingerList' : 'http://ptuyxr.cn/music/api/getSingerList'
   // const url = '/api/getSingerList'
 
   const data = {
@@ -47,7 +47,7 @@ export function getSingerList () {
 }
 
 export function getSingerDetail (singerId) {
-  const url = debug ? '/api/getSingerDetail' : 'http://www.ptuyxr.cn/music/api/getSingerDetail'
+  const url = debug ? '/api/getSingerDetail' : 'http://ptuyxr.cn/music/api/getSingerDetail'
   // const url = '/api/getSingerDetail'
 
   const data = {

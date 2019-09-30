@@ -22,7 +22,7 @@ import { commonParams } from './config'
 const debug = process.env.NODE_ENV !== 'production'
 
 export function getSlider () {
-  const url = debug ? '/api/getSlider' : 'http://www.ptuyxr.cn/music/api/getSlider'
+  const url = debug ? '/api/getSlider' : 'http://ptuyxr.cn/music/api/getSlider'
   // const url = '/api/getSlider'
 
   const data = Object.assign({}, commonParams, {
@@ -39,7 +39,7 @@ export function getSlider () {
 }
 
 export function getList () {
-  const url = debug ? '/api/getList' : 'http://www.ptuyxr.cn/music/api/getList'
+  const url = debug ? '/api/getList' : 'http://ptuyxr.cn/music/api/getList'
   // const url = '/api/getList'
 
   const data = Object.assign({}, commonParams, {
@@ -62,7 +62,7 @@ export function getList () {
 }
 
 export function getDissSongList (id) {
-  const url = debug ? '/api/getDissSong' : 'http://www.ptuyxr.cn/music/api/getDissSong'
+  const url = debug ? '/api/getDissSong' : 'http://ptuyxr.cn/music/api/getDissSong'
   // const url = '/api/getDissSong'
 
   const data = {
