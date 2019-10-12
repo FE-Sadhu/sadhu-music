@@ -15,13 +15,13 @@
           <h1 class="list-title">推荐歌单</h1>
           <ul>
             <li
-              v-for="item in lists"
+              v-for="(item, index) in lists"
               :key="item.dissid"
               class="item-list"
               @click="selectItem(item)"
             >
               <div class="avatar">
-                <img @load="loadImage" class="image" v-lazy="item.imgurl">
+                <img @load="loadImage(index)" class="image" v-lazy="item.imgurl">
               </div>
               <div class="text">
                 <h2 class="name">{{item.dissname}}</h2>
@@ -45,6 +45,8 @@ import Loading from 'base/loading/loading'
 import { getSlider, getList } from 'api/recommend'
 import { playlistMixin } from 'common/js/mixin'
 import { mapMutations } from 'vuex'
+
+// let TIMES = 0 测试 onload
 
 export default {
   mixins: [playlistMixin],
@@ -92,18 +94,22 @@ export default {
         this.sliders = res.data.slider
       })
     },
-    loadImage () {
+    loadImage (index) {
       // if (!this.checkloaded) {
       //   this.checkloaded = true
       //   setTimeout(() => {
       //     this.$refs.scroll.refresh()
       //   }, 20)
       // } // 第一张图片加载完后，下一轮tick(20ms后)，后面的图片竟然还没加载完。。。
-      setTimeout(() => {
-        if (this.$refs.scroll) {
-          this.$refs.scroll.refresh()
-        }
-      }, 20)
+      if (index === this.lists.length - 1) {
+        setTimeout(() => {
+          // TIMES++
+          if (this.$refs.scroll) {
+            this.$refs.scroll.refresh()
+            // console.log(TIMES)
+          }
+        }, 20)
+      }
     },
     ...mapMutations({
       setDisc: 'SET_DISC'
@@ -169,6 +175,7 @@ export default {
         align-items: center
         padding: 0 20px 20px 20px
         .avatar
+          // height: 60px
           flex: 0 0 60px
           padding-right 20px
           .image
